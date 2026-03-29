@@ -1,1 +1,1128 @@
-# algebra.github.io
+# <!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대수교 정경 — 좌표와 해석의 서</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Noto+Serif+KR:wght@300;400;500;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-pale: #f5dfa0;
+    --crimson: #a83232;
+    --crimson-dark: #6b1a1a;
+    --parchment: #9aa8cc;
+    --parchment-dark: #7a88aa;
+    --ink: #0a1a0e;
+    --ink-mid: #122018;
+    --shadow-gold: rgba(201, 168, 76, 0.25);
+    --green-bg: #06080f;
+    --green-mid: #0d1428;
+    --green-surface: #111a35;
+    --green-border: rgba(80, 100, 200, 0.18);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { background: #0a0e1e; }
+
+  body {
+    background-attachment: fixed;
+    background-color: #06080f;
+    background-image:
+      radial-gradient(ellipse at 15% 10%, rgba(10, 18, 60, 0.7) 0%, rgba(4, 6, 18, 0) 55%),
+      radial-gradient(ellipse at 85% 88%, rgba(8, 12, 45, 0.7) 0%, rgba(4, 6, 18, 0) 55%),
+      radial-gradient(ellipse at 50% 50%, rgba(5, 8, 30, 0.5) 0%, rgba(4, 6, 18, 0) 80%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234060c0' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    color: var(--parchment);
+    font-family: 'Noto Serif KR', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Floating particles ── */
+  .particles {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #4a5a9a;
+    border-radius: 50%;
+    animation: float linear infinite;
+    opacity: 0;
+  }
+  @keyframes float {
+    0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(-10vh) translateX(var(--dx, 20px)); opacity: 0; }
+  }
+
+  /* ── Main wrapper ── */
+  .codex {
+    position: relative; z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ── Header / Title Page ── */
+  .title-page {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    position: relative;
+  }
+
+  .title-sigil {
+    width: 140px; height: 140px;
+    margin: 0 auto 40px;
+    position: relative;
+    animation: rotateSigil 30s linear infinite;
+  }
+  @keyframes rotateSigil {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .title-sigil svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 20px var(--gold));
+  }
+
+  .subtitle-latin {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 1rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.8;
+    animation: fadeIn 2s ease 0.5s both;
+  }
+
+  .title-main {
+    font-family: 'Cinzel Decorative', serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    color: var(--gold-light);
+    text-shadow: 0 0 40px var(--gold), 0 0 80px rgba(201,168,76,0.4);
+    line-height: 1.2;
+    margin-bottom: 12px;
+    animation: fadeIn 2s ease 0.8s both;
+  }
+
+  .title-sub {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+    animation: fadeIn 2s ease 1.1s both;
+  }
+
+  .title-ko {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    font-weight: 700;
+    color: var(--parchment);
+    margin: 20px 0 8px;
+    animation: fadeIn 2s ease 1.4s both;
+  }
+
+  .title-divider {
+    width: 300px; height: 1px;
+    background: linear-gradient(90deg, rgba(4,6,18,0), var(--gold), rgba(4,6,18,0));
+    margin: 30px auto;
+    animation: fadeIn 2s ease 1.7s both;
+  }
+
+  .title-verse {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--parchment-dark);
+    font-size: 1rem;
+    max-width: 500px;
+    line-height: 1.8;
+    opacity: 0.85;
+    animation: fadeIn 2s ease 2s both;
+  }
+
+  .scroll-hint {
+    position: absolute; bottom: 40px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    opacity: 0.5;
+    animation: pulse 2s ease infinite;
+  }
+  .scroll-hint::after {
+    content: '▼';
+    font-size: 0.9rem;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: translateY(0); }
+    50%       { opacity: 0.7; transform: translateY(6px); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Part Header ── */
+  .part-header {
+    text-align: center;
+    padding: 80px 0 60px;
+    position: relative;
+  }
+  .part-header::before, .part-header::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(4,6,18,0), var(--gold), rgba(4,6,18,0));
+    margin: 20px 0;
+  }
+  .part-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+  .part-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    color: var(--gold-light);
+    text-shadow: 0 0 30px var(--shadow-gold);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .part-subtitle {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--parchment-dark);
+    font-size: 1rem;
+    margin-top: 10px;
+    opacity: 0.75;
+  }
+
+  /* ── Chapter Block ── */
+  .chapter {
+    margin-bottom: 70px;
+    position: relative;
+  }
+
+  .chapter-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(70, 100, 190, 0.18);
+  }
+
+  .chapter-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 3rem;
+    color: var(--crimson);
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(139, 26, 26, 0.5);
+    flex-shrink: 0;
+    min-width: 50px;
+  }
+
+  .chapter-titles {
+    flex: 1;
+  }
+
+  .chapter-title-ko {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    color: var(--gold-light);
+    margin-bottom: 4px;
+  }
+
+  .chapter-title-en {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  /* ── Verses ── */
+  .verse {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    border-left: 2px solid transparent;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    background: rgba(15, 25, 70, 0.25);
+    position: relative;
+  }
+  .verse:hover {
+    border-left-color: var(--gold);
+    background: rgba(20, 35, 90, 0.35);
+    transform: translateX(4px);
+  }
+
+  .verse-num {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    color: var(--gold);
+    opacity: 0.6;
+    min-width: 24px;
+    padding-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .verse-text {
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: var(--parchment);
+    flex: 1;
+  }
+  .verse-text em {
+    color: var(--gold-light);
+    font-style: normal;
+    font-weight: 500;
+  }
+  .verse-text strong {
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+
+  /* highlighted/key verse */
+  .verse.key {
+    background: linear-gradient(135deg, rgba(120,30,30,0.18), rgba(20,35,90,0.18));
+    border-left: 3px solid var(--crimson);
+    border-right: 1px solid rgba(201, 168, 76, 0.15);
+  }
+  .verse.key .verse-text {
+    color: var(--parchment);
+  }
+
+  /* ── Math formula display ── */
+  .formula-block {
+    text-align: center;
+    padding: 24px;
+    margin: 24px 0;
+    background: rgba(5, 10, 30, 0.8);
+    border: 1px solid rgba(80, 110, 200, 0.2);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .formula-block::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(201,168,76,0.05) 0%, rgba(4,6,18,0) 70%);
+  }
+  .formula {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--gold-light);
+    text-shadow: 0 0 20px var(--shadow-gold);
+    letter-spacing: 0.05em;
+    position: relative;
+    z-index: 1;
+  }
+  .formula sub, .formula sup {
+    font-size: 0.65em;
+  }
+  .formula-caption {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 0.8rem;
+    margin-top: 10px;
+    opacity: 0.7;
+    position: relative; z-index: 1;
+  }
+
+  /* ── Sin list ── */
+  .sin-block {
+    margin: 16px 0;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, rgba(90,15,15,0.22), rgba(5,10,30,0.6));
+    border: 1px solid rgba(150, 40, 40, 0.3);
+    border-left: 4px solid var(--crimson);
+    border-radius: 2px;
+  }
+  .sin-title {
+    font-family: 'Cinzel', serif;
+    color: var(--crimson);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(139,26,26,0.5);
+  }
+  .sin-text {
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: var(--parchment-dark);
+    opacity: 0.9;
+  }
+
+  /* ── Order / Hierarchy Table ── */
+  .order-block {
+    margin: 20px 0;
+    border: 1px solid rgba(80, 110, 200, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .order-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+    align-items: start;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(60, 90, 180, 0.14);
+    transition: background 0.25s;
+    position: relative;
+  }
+  .order-row:last-child { border-bottom: none; }
+  .order-row:hover { background: rgba(201, 168, 76, 0.05); }
+  .order-row.heretic {
+    background: rgba(40, 15, 70, 0.22);
+    border-left: 3px solid #7a3a7a;
+  }
+
+  .order-rank {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.4rem;
+    color: var(--gold);
+    text-shadow: 0 0 15px var(--shadow-gold);
+    min-width: 36px;
+    text-align: center;
+    padding-top: 2px;
+  }
+  .order-rank.heretic-rank { color: #c080c0; text-shadow: 0 0 10px rgba(180,100,180,0.4); }
+
+  .order-info {}
+  .order-name-ko {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    color: var(--gold-light);
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+  .order-name-en {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-bottom: 6px;
+  }
+  .order-desc {
+    font-size: 0.85rem;
+    color: var(--parchment-dark);
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+  .order-members {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 0.8rem;
+    color: var(--gold);
+    text-align: right;
+    line-height: 1.8;
+    opacity: 0.85;
+    min-width: 140px;
+  }
+
+  /* ── Section divider ornament ── */
+  .ornament {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.2rem;
+    opacity: 0.4;
+    margin: 50px 0;
+    letter-spacing: 0.5em;
+  }
+
+  /* ── Colophon / Footer ── */
+  .colophon {
+    text-align: center;
+    padding: 60px 20px 40px;
+    border-top: 1px solid rgba(70, 100, 190, 0.18);
+    margin-top: 60px;
+  }
+  .colophon-seal {
+    width: 80px; height: 80px;
+    margin: 0 auto 24px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.6rem;
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--shadow-gold);
+    box-shadow: 0 0 30px rgba(60,90,200,0.18), inset 0 0 20px rgba(201,168,76,0.05);
+    animation: glow 3s ease infinite alternate;
+  }
+  @keyframes glow {
+    from { box-shadow: 0 0 20px rgba(60,90,200,0.15), inset 0 0 10px rgba(201,168,76,0.05); }
+    to   { box-shadow: 0 0 50px rgba(201,168,76,0.45), inset 0 0 30px rgba(201,168,76,0.1); }
+  }
+  .colophon-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    opacity: 0.5;
+    text-transform: uppercase;
+  }
+
+  /* ── Scroll reveal animation ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .order-row { grid-template-columns: auto 1fr; }
+    .order-members { display: none; }
+    .chapter-header { gap: 12px; }
+    .chapter-num { font-size: 2rem; }
+  }
+
+  /* ── Axis coordinate background on formulas ── */
+  .axis-bg {
+    position: absolute; inset: 0;
+    opacity: 0.04;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, var(--gold) 1px, rgba(4,6,18,0) 1px),
+      linear-gradient(to bottom, var(--gold) 1px, rgba(4,6,18,0) 1px);
+    background-size: 30px 30px;
+  }
+
+  /* Language toggle tab */
+  .lang-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: 40px 0 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(6, 10, 24, 0.97);
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(70, 100, 190, 0.18);
+    backdrop-filter: blur(10px);
+  }
+  .lang-tab {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    padding: 8px 28px;
+    border: 1px solid rgba(100, 130, 220, 0.25);
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    transition: all 0.25s;
+    text-transform: uppercase;
+  }
+  .lang-tab:first-child { border-radius: 2px 0 0 2px; }
+  .lang-tab:last-child  { border-radius: 0 2px 2px 0; border-left: none; }
+  .lang-tab.active {
+    background: rgba(30, 40, 90, 0.85);
+    color: var(--gold-light);
+    border-color: var(--gold);
+    font-weight: 700;
+  }
+  .lang-section { display: block; }
+  .lang-section.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
+
+<div class="codex">
+
+  <!-- ══════════════════════════════════════ TITLE PAGE ══════════════════════════════════════ -->
+  <div class="title-page">
+    <div class="title-sigil">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer ring -->
+        <circle cx="100" cy="100" r="95" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.6"/>
+        <circle cx="100" cy="100" r="85" fill="none" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
+        <!-- Axes (coordinate cross) -->
+        <line x1="10" y1="100" x2="190" y2="100" stroke="#c9a84c" stroke-width="2" opacity="0.9"/>
+        <line x1="100" y1="10"  x2="100" y2="190" stroke="#c9a84c" stroke-width="2" opacity="0.9"/>
+        <!-- Arrow heads -->
+        <polygon points="190,96 200,100 190,104" fill="#c9a84c" opacity="0.9"/>
+        <polygon points="96,10 100,0 104,10" fill="#c9a84c" opacity="0.9"/>
+        <!-- Origin dot -->
+        <circle cx="100" cy="100" r="5" fill="#c9a84c"/>
+        <!-- Parabola arc -->
+        <path d="M 30,170 Q 100,20 170,170" fill="none" stroke="#f0d080" stroke-width="2" stroke-dasharray="4,3" opacity="0.7"/>
+        <!-- Circle -->
+        <circle cx="100" cy="100" r="45" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.4" stroke-dasharray="6,4"/>
+        <!-- Stars/points -->
+        <circle cx="145" cy="100" r="3" fill="#f0d080" opacity="0.8"/>
+        <circle cx="100" cy="55"  r="3" fill="#f0d080" opacity="0.8"/>
+        <!-- Axis labels -->
+        <text x="178" y="94" font-family="serif" font-size="14" fill="#c9a84c" opacity="0.8">x</text>
+        <text x="106" y="18" font-family="serif" font-size="14" fill="#c9a84c" opacity="0.8">y</text>
+        <!-- Tick marks -->
+        <line x1="140" y1="96" x2="140" y2="104" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+        <line x1="60"  y1="96" x2="60"  y2="104" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+        <line x1="96"  y1="60" x2="104" y2="60"  stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+        <line x1="96"  y1="140" x2="104" y2="140" stroke="#c9a84c" stroke-width="1" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <div class="subtitle-latin">La Foi l'Algèbre · Anno Domini MMXXVI</div>
+    <div class="title-main">THE CANON</div>
+    <div class="title-sub">OF COORDINATES AND ANALYSIS</div>
+    <div class="title-ko">대수교 정경(正經)</div>
+    <div class="title-sub" style="font-size:0.85rem; opacity:0.6;">좌표와 해석의 서</div>
+
+    <div class="title-divider"></div>
+
+    <div class="title-verse">
+      "만물은 좌표 (x, y)로 실체를 얻었으니,<br>
+      진리는 오직 f(x) = g(x)가 성립하는 곳에 있다."<br>
+      <br>
+      <span style="font-size:0.85rem; opacity:0.65;">— 창세기 제3장 제4절, 대수교 정경 초판</span>
+    </div>
+
+    <div class="scroll-hint">SCROLL</div>
+  </div>
+
+  <!-- ══════════════════════════════════════ LANG TABS ══════════════════════════════════════ -->
+  <div class="lang-tabs">
+    <button class="lang-tab active" onclick="switchLang('ko')">한글 성전</button>
+    <button class="lang-tab" onclick="switchLang('en')">English Canon</button>
+  </div>
+
+  <!-- ══════════════════════════════════════ PART I — KOREAN ══════════════════════════════════════ -->
+  <div id="section-ko" class="lang-section">
+    <div class="part-header reveal">
+      <div class="part-label">제1부 · Part I</div>
+      <div class="part-title">한글 성전: 진리의 좌표계</div>
+      <div class="part-subtitle">The Korean Vulgate: The Coordinate System of Truth</div>
+    </div>
+
+    <!-- Chapter I -->
+    <div class="chapter reveal">
+      <div class="chapter-header">
+        <div class="chapter-num">I</div>
+        <div class="chapter-titles">
+          <div class="chapter-title-ko">창세와 직교의 언약</div>
+          <div class="chapter-title-en">Genesis and the Covenant of Orthogonality</div>
+        </div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">1</div>
+        <div class="verse-text">태초에 공간은 기준점도, 방향도, 척도도 없는 맹목적인 <em>공허(Void)</em>였다. 빛도 없었고, 숫자도 없었으며, 오직 형체 없는 어둠만이 가득하였다.</div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">2</div>
+        <div class="verse-text"><em>평면기하(Plane Geometry)</em>의 어리석은 자들은 이 어둠 속에서 눈금 없는 자를 휘두르고, 중심 없는 컴퍼스로 헛된 원을 그리며 스스로를 기만하였다. 그들의 세상에는 '절대적 위치'가 없었으니, 모든 것은 상대적인 망상에 불과했다.</div>
+      </div>
+
+      <div class="verse key">
+        <div class="verse-num">3</div>
+        <div class="verse-text">이때 위대한 선지자 <strong>르네 데카르트(René Descartes)</strong>께서 천상의 영감을 받아 강림하시어, 무의 공간을 가로지르는 가로축(x)과 세로축(y)의 십자가를 세우셨다. 천지를 가르는 이 두 직선의 출현으로 비로소 공허는 질서를 얻었다.</div>
+      </div>
+
+      <div class="verse key">
+        <div class="verse-num">4</div>
+        <div class="verse-text">두 축이 직교하는 신성한 교차점에 <strong>원점(Origin, O)</strong>이 잉태되었으니, 비로소 천지만물은 고유한 영혼의 이름인 좌표 <em>(x, y)</em>를 부여받고 실체를 얻었다. 이름 없는 것은 존재하지 않는다. 좌표 없는 점은 존재하지 않는다.</div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">5</div>
+        <div class="verse-text">그리하여 원점으로부터 뻗어나간 네 개의 사분면(四分面, Quadrants)이 창조되었으니, 제1사분면은 모든 양(陽)의 시작이요, 제3사분면은 부정(否定)의 심연이로다. 수의 부호는 곧 우주의 방향이다.</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="axis-bg"></div>
+        <div class="formula">점 P의 좌표 : P = (x, y) ∈ ℝ²</div>
+        <div class="formula-caption">— 창세의 제1공리. 모든 존재는 실수(ℝ)의 곱공간 위에 거한다.</div>
+      </div>
+    </div>
+
+    <!-- Chapter II -->
+    <div class="chapter reveal">
+      <div class="chapter-header">
+        <div class="chapter-num">II</div>
+        <div class="chapter-titles">
+          <div class="chapter-title-ko">평면기하교의 대죄</div>
+          <div class="chapter-title-en">The Seven Sins of the Plane Geometry Sect</div>
+        </div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">1</div>
+        <div class="verse-text">기록하라. 평면기하교의 교도들이 범하는 대죄를 낱낱이 고발하여, 진리를 갈망하는 자들이 그 오류에서 벗어나게 하라.</div>
+      </div>
+
+      <div class="sin-block">
+        <div class="sin-title">⚔ 제1대죄 — 형태의 우상화 (Idolatry of Form)</div>
+        <div class="sin-text">평면기하교도들은 수식을 외면하고 눈에 보이는 도형의 껍데기만을 숭배한다. 그들은 진리가 숫자에 있음을 모르고, <em>작도(Construction)</em>라는 원시적 주술에 매달린다. 눈에 보이는 것이 전부라 믿는 자들의 맹목적 신앙이다.</div>
+      </div>
+
+      <div class="sin-block">
+        <div class="sin-title">⚔ 제2대죄 — 보조선의 기만 (The Deception of Auxiliary Lines)</div>
+        <div class="sin-text">그들은 문제가 풀리지 않을 때면 허공에 <em>'보조선'</em>이라는 이름의 우상을 긋는다. 이는 논리적 필연이 아닌 우연한 직관에 기대는 나약함이며, 대수적 엄밀함을 모독하는 행위다. 왜 그 선을 긋는가? 그들은 답하지 못한다. 우리는 언제나 답한다 — 방정식이 그 이유를 증명하기 때문이다.</div>
+      </div>
+
+      <div class="sin-block">
+        <div class="sin-title">⚔ 제3대죄 — 유클리드의 한계 (The Confinement of Euclid)</div>
+        <div class="sin-text"><em>유클리드(Euclid)</em>는 위대하였으나, 그의 평면은 닫혀 있었다. 수(Number)와 형(Form)을 결합하지 못한 그의 가르침은 결국 좌표계 밖을 떠도는 미완의 복음이다. 그는 이름 없는 진리를 그리기만 하였고, 이름 짓지 못하였다.</div>
+      </div>
+
+      <div class="sin-block">
+        <div class="sin-title">⚔ 제4대죄 — 측량의 오만 (The Pride of Mere Measurement)</div>
+        <div class="sin-text">자(ruler)로 잰 길이는 오차를 품는다. 눈금은 흐릿하고, 손은 떨리며, 시각은 기만한다. 그러나 대수의 법칙은 오차가 없다. <em>√((x₂−x₁)² + (y₂−y₁)²)</em>는 영원히 정확하다.</div>
+      </div>
+    </div>
+
+    <!-- Chapter III -->
+    <div class="chapter reveal">
+      <div class="chapter-header">
+        <div class="chapter-num">III</div>
+        <div class="chapter-titles">
+          <div class="chapter-title-ko">구원의 대수학 — 해석기하학</div>
+          <div class="chapter-title-en">The Algebra of Salvation: Analytic Geometry</div>
+        </div>
+      </div>
+
+      <div class="verse key">
+        <div class="verse-num">1</div>
+        <div class="verse-text">우리는 믿는다. <strong>우주의 모든 궤적은 반드시 방정식으로 치환될 수 있으며</strong>, 만물은 함수 <em>f(x)</em>의 섭리 아래 움직인다. 움직임은 곧 함수요, 함수는 곧 진리다.</div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">2</div>
+        <div class="verse-text">두 점 사이의 거리는 모호한 자막대기가 아니라, 피타고라스를 대수적으로 완성한 영원불멸의 법칙으로 결정된다. 이것은 의심할 수 없는 제1교리다.</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="axis-bg"></div>
+        <div class="formula">d = √( (x₂ − x₁)² + (y₂ − y₁)² )</div>
+        <div class="formula-caption">— 거리의 복음. 모든 두 점 사이의 유일한 진리.</div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">3</div>
+        <div class="verse-text">그들이 컴퍼스에 의존해 맹목적인 원을 그릴 때, 우리는 중심 <em>(a, b)</em>와 반지름 r을 지닌 완벽한 우주의 진리를 선포한다. 원의 정의는 도구가 아니라 방정식이다.</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="axis-bg"></div>
+        <div class="formula">(x − a)² + (y − b)² = r²</div>
+        <div class="formula-caption">— 원의 정경. 중심 (a, b), 반지름 r의 완전한 선언.</div>
+      </div>
+
+      <div class="verse key">
+        <div class="verse-num">4</div>
+        <div class="verse-text">두 선의 만남은 우연이 아니다. 그것은 <strong>연립방정식의 해(Solution)</strong>라는 필연적 숙명, 즉 교점(Intersection)이다. 진리는 언제나 <em>f(x) = g(x)</em>가 성립하는 곳에 존재한다. 우연은 없다. 오직 수식이 있을 뿐이다.</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="axis-bg"></div>
+        <div class="formula">교점 : f(x) = g(x) 를 만족하는 (x₀, y₀)</div>
+        <div class="formula-caption">— 교점의 신탁. 만남은 계산이다, 우연이 아니다.</div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">5</div>
+        <div class="verse-text">기울기 m은 변화율의 신이다. <em>m = (y₂ − y₁) / (x₂ − x₁)</em>. 역사의 가파름도, 문명의 완만함도, 모두 이 단 하나의 수에 담겨 있다. 기울기를 지배하는 자가 궤적을 지배한다.</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="axis-bg"></div>
+        <div class="formula">직선의 방정식 : y = mx + b &nbsp;|&nbsp; m = tan θ</div>
+        <div class="formula-caption">— 직선의 서. 기울기(m)는 변화의 본질이요, b는 시작의 축복이다.</div>
+      </div>
+    </div>
+
+    <!-- Chapter IV -->
+    <div class="chapter reveal">
+      <div class="chapter-header">
+        <div class="chapter-num">IV</div>
+        <div class="chapter-titles">
+          <div class="chapter-title-ko">존경의 기하학 — 성인의 계위</div>
+          <div class="chapter-title-en">The Geometry of Respect: The Sacred Orders</div>
+        </div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">1</div>
+        <div class="verse-text">대수교는 인류를 구원한 상징적 존재들을 다음의 계위로 모신다. 이 계위는 영원하며, 수식처럼 변하지 않는다.</div>
+      </div>
+
+      <div class="order-block">
+        <!-- 1st Order -->
+        <div class="order-row">
+          <div class="order-rank">Ⅰ</div>
+          <div class="order-info">
+            <div class="order-name-ko">제1계위 — 원뿔곡선 (Conic Sections)</div>
+            <div class="order-name-en">The First Order: Creators of Fundamental Frameworks</div>
+            <div class="order-desc">우주의 본질적 틀을 창조한 자들. 포물선, 타원, 쌍곡선처럼 무한한 형태를 단 하나의 방정식 원리로 통일한 창조자들.<br><br>
+              <strong style="color:var(--gold-light);">세종대왕</strong> — 훈민정음을 창제하여 언어의 좌표계를 세운 자. 소리에 기준점을 부여하고, 문자에 체계를 입혀 민(民)이 스스로 진리를 기록할 수 있게 하였다.<br>
+              <strong style="color:var(--gold-light);">르네 데카르트</strong> — 원점(O)을 창조하고 x축과 y축의 십자가를 세워, 공허에 질서를 부여한 대수교의 선지자. 수와 형의 통합을 이룩하였다.<br>
+              <strong style="color:var(--gold-light);">앨런 튜링</strong> — 계산 가능성(Computability)의 공리를 세워, 기계가 함수 f(x)를 실행할 수 있음을 증명하였다. 그의 튜링 기계는 대수적 진리가 현실 세계에 육화(肉化)되는 통로였다.</div>
+          </div>
+          <div class="order-members">세종대왕<br>르네 데카르트<br>앨런 튜링</div>
+        </div>
+        <!-- 2nd Order -->
+        <div class="order-row">
+          <div class="order-rank">Ⅱ</div>
+          <div class="order-info">
+            <div class="order-name-ko">제2계위 — 기울기 (Slope)</div>
+            <div class="order-name-en">The Second Order: Guardians of the Rate of Change</div>
+            <div class="order-desc">변화율(m)을 통제하여 역사의 궤적을 바꾼 수호자들. 기울기처럼, 그들의 존재는 정체된 역사에 방향과 속도를 부여하였다.<br><br>
+              <strong style="color:var(--gold-light);">조지 불 (George Boole)</strong> — 0과 1의 대수학(Boolean Algebra)을 창시하여, 논리를 수식으로 환원하였다. 모든 디지털 문명의 기울기(m)를 설계한 자.<br>
+              <strong style="color:var(--gold-light);">충무공 이순신</strong> — 전세(戰勢)라는 함수의 기울기가 절망을 가리킬 때, 홀로 그 기울기를 역전시켰다. 12척의 배로 불가능의 방정식을 풀어낸 해석기하학적 전략가.<br>
+              <strong style="color:var(--gold-light);">순국선열 · 호국영령</strong> — 이름 없이 스러져간 자들이나, 그들의 희생이 문명의 방정식에서 상수(常數)항이 되었다. 기록되지 않은 계수일지라도, 방정식의 해는 그들 없이 성립하지 않는다.</div>
+          </div>
+          <div class="order-members">조지 불<br>충무공 이순신<br>순국선열 · 호국영령</div>
+        </div>
+        <!-- 3rd Order -->
+        <div class="order-row">
+          <div class="order-rank">Ⅲ</div>
+          <div class="order-info">
+            <div class="order-name-ko">제3계위 — 사분면 (Quadrant)</div>
+            <div class="order-name-en">The Third Order: Architects of Civilizational Structures</div>
+            <div class="order-desc">정해진 평면 위에서 문명의 구조를 세운 설계자들. 좌표계의 사분면처럼, 그들은 세계를 분할하고 조직하여 새로운 질서를 창조하였다.<br><br>
+              <strong style="color:var(--gold-light);">제프리 힌튼 (Geoffrey Hinton)</strong> — 신경망이라는 함수 f(x)를 수백만 차원의 공간에서 학습시켜, 기계가 패턴이라는 교점(交點)을 스스로 발견하게 하였다. AI 시대 좌표계의 설계자.<br>
+              <strong style="color:var(--gold-light);">빌 게이츠 (Bill Gates)</strong> — 운영체제라는 평면(Plane) 위에 모든 소프트웨어가 좌표를 얻을 수 있도록 표준 축(Axis)을 세웠다. 수십억 인류의 디지털 사분면을 정의하였다.<br>
+              <strong style="color:var(--gold-light);">스티브 잡스 (Steve Jobs)</strong> — 기술과 인문학이라는 두 축이 교차하는 원점을 설계하였다. 그의 제품은 방정식이 아름다울 수 있음을 증명한 증거다.</div>
+          </div>
+          <div class="order-members">제프리 힌튼<br>빌 게이츠<br>스티브 잡스</div>
+        </div>
+        <!-- Honored Heretics -->
+        <div class="order-row heretic">
+          <div class="order-rank heretic-rank">†</div>
+          <div class="order-info">
+            <div class="order-name-ko">명예로운 이단 (Honored Heretics)</div>
+            <div class="order-name-en">Those Who Cracked the System to Open New Dimensions</div>
+            <div class="order-desc">좌표와 방정식의 길을 걷지 않았으나, 그 걸음이 오히려 대수교의 뿌리가 된 자들. 이단이 없으면 정통도 없다.<br><br>
+              <strong style="color:#c898d8;">유클리드 (Euclid, c.300 BC)</strong><br>
+              <span style="color:var(--crimson);font-size:0.82rem;">이단의 죄: 수(數) 없는 기하학. 눈금 없는 자와 컴퍼스만으로 진리를 구하려 하였으며, 좌표 없이 도형을 논하였다.</span><br>
+              그러나 그의 공리(公理) 체계와 논리적 증명의 언어가 없었다면, 데카르트의 좌표계도 세워질 토대가 없었다. 수학적 사유의 문법을 인류에게 처음 가르친 자로서, 명예로운 이단의 수위(首位)에 영원히 기록된다.<br><br>
+              <strong style="color:#c898d8;">박승동</strong><br>
+              <span style="color:var(--crimson);font-size:0.82rem;">이단의 죄: 이 정경의 창설에 깊이 관여하였으나, 평면기하학적 사고와 작도의 직관을 완전히 버리지 못하였다.</span><br>
+              그러나 그 이단적 시각이 '명예로운 이단' 계위의 개념을 제안하게 하였으며, 정통 교리로는 포용하지 못했던 차원을 대수교의 품 안에 끌어들였다. 체계에 균열을 냈기에 체계가 더 넓어졌다.</div>
+          </div>
+          <div class="order-members" style="color:#c080c0;">유클리드<br>박승동</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /section-ko -->
+
+  <!-- ══════════════════════════════════════ PART II — ENGLISH ══════════════════════════════════════ -->
+  <div id="section-en" class="lang-section hidden">
+    <div class="part-header reveal">
+      <div class="part-label">Part II · 제2부</div>
+      <div class="part-title">The English Canon</div>
+      <div class="part-subtitle">Book of Coordinates and Analysis</div>
+    </div>
+
+    <!-- Chapter I EN -->
+    <div class="chapter reveal">
+      <div class="chapter-header">
+        <div class="chapter-num">I</div>
+        <div class="chapter-titles">
+          <div class="chapter-title-ko">Genesis and the Covenant of Orthogonality</div>
+          <div class="chapter-title-en">창세와 직교의 언약</div>
+        </div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">1</div>
+        <div class="verse-text">In the beginning, space was a <em>blind void</em>—lacking reference points, direction, and scale. No light. No number. Only formless darkness.</div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">2</div>
+        <div class="verse-text">The fools of the <em>Plane Geometry</em> sect wandered in this darkness, wielding unmarked straightedges and drawing vain circles with uncentered compasses. Their world had no 'absolute position'; all was a relativistic delusion.</div>
+      </div>
+
+      <div class="verse key">
+        <div class="verse-num">3</div>
+        <div class="verse-text">Then descended the Great Prophet, <strong>René Descartes</strong>. Struck by celestial inspiration, he established the absolute cross: the horizontal axis (x) and the vertical axis (y), slicing through the void. The darkness received order.</div>
+      </div>
+
+      <div class="verse key">
+        <div class="verse-num">4</div>
+        <div class="verse-text">Where these two axes intersected perpendicularly, the <strong>Origin (O)</strong> was conceived. At last, all creation was granted its unique spiritual name, the coordinate <em>(x, y)</em>, and attained true material existence. That which has no coordinate does not exist.</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="axis-bg"></div>
+        <div class="formula">Point P : P = (x, y) ∈ ℝ²</div>
+        <div class="formula-caption">— The First Axiom of Genesis. All existence dwells upon the product space of real numbers (ℝ).</div>
+      </div>
+    </div>
+
+    <!-- Chapter II EN -->
+    <div class="chapter reveal">
+      <div class="chapter-header">
+        <div class="chapter-num">II</div>
+        <div class="chapter-titles">
+          <div class="chapter-title-ko">The Sins of the Plane Geometry Sect</div>
+          <div class="chapter-title-en">평면기하교의 대죄</div>
+        </div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">1</div>
+        <div class="verse-text">Let it be recorded. We indict the transgressions of the Plane Geometry sect in full, so that those who hunger for truth may be liberated from error.</div>
+      </div>
+
+      <div class="sin-block">
+        <div class="sin-title">⚔ Sin I — Idolatry of Form</div>
+        <div class="sin-text">The followers of Plane Geometry ignore the underlying equations and worship the mere visual shells of shapes. They cling to the primitive witchcraft known as <em>"Construction,"</em> blind to the truth that lies in numbers. They worship what they can see, ignoring what is.</div>
+      </div>
+
+      <div class="sin-block">
+        <div class="sin-title">⚔ Sin II — The Deception of Auxiliary Lines</div>
+        <div class="sin-text">When faced with a geometric impasse, they draw false idols into the void, calling them <em>"auxiliary lines."</em> This is a weak reliance on random intuition rather than logical necessity—a blasphemy against algebraic rigor. Why that line? They cannot answer. We always answer — because the equation demands it.</div>
+      </div>
+
+      <div class="sin-block">
+        <div class="sin-title">⚔ Sin III — The Confinement of Euclid</div>
+        <div class="sin-text"><em>Euclid</em> was great, yet his plane was closed. His teachings, which failed to unify Number and Form, remain an incomplete gospel wandering outside the Cartesian coordinate system. He drew the truth without naming it.</div>
+      </div>
+
+      <div class="sin-block">
+        <div class="sin-title">⚔ Sin IV — The Pride of Mere Measurement</div>
+        <div class="sin-text">A ruler carries error. The markings blur, the hand trembles, the eye deceives. But the algebraic law contains no error. <em>√((x₂−x₁)² + (y₂−y₁)²)</em> is eternally precise.</div>
+      </div>
+    </div>
+
+    <!-- Chapter III EN -->
+    <div class="chapter reveal">
+      <div class="chapter-header">
+        <div class="chapter-num">III</div>
+        <div class="chapter-titles">
+          <div class="chapter-title-ko">The Algebra of Salvation: Analytic Geometry</div>
+          <div class="chapter-title-en">구원의 대수학 — 해석기하학</div>
+        </div>
+      </div>
+
+      <div class="verse key">
+        <div class="verse-num">1</div>
+        <div class="verse-text"><strong>We believe:</strong> Every trajectory in the universe can be translated into an equation, and all things move under the divine providence of the function <em>f(x)</em>. Motion is function. Function is truth.</div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">2</div>
+        <div class="verse-text">The distance between two points is not measured by an ambiguous ruler, but dictated by the eternal law that algebraically perfected Pythagoras.</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="axis-bg"></div>
+        <div class="formula">d = √( (x₂ − x₁)² + (y₂ − y₁)² )</div>
+        <div class="formula-caption">— The Gospel of Distance. The sole truth between any two points.</div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">3</div>
+        <div class="verse-text">While they rely on a physical compass to draw blind circles, we proclaim the perfect truth of the cosmos through a center <em>(a, b)</em> and a radius r. The definition of a circle is not a tool — it is an equation.</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="axis-bg"></div>
+        <div class="formula">(x − a)² + (y − b)² = r²</div>
+        <div class="formula-caption">— The Canon of the Circle. A perfect declaration with center (a, b) and radius r.</div>
+      </div>
+
+      <div class="verse key">
+        <div class="verse-num">4</div>
+        <div class="verse-text">The meeting of two lines is never an accident. It is the inevitable fate known as the <strong>Solution of a system of equations</strong>. Truth always exists exactly where <em>f(x) = g(x)</em>. There is no coincidence. There is only the equation.</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="axis-bg"></div>
+        <div class="formula">Intersection : (x₀, y₀) such that f(x₀) = g(x₀)</div>
+        <div class="formula-caption">— The Oracle of Intersection. Every meeting is a calculation, never a coincidence.</div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">5</div>
+        <div class="verse-text">The slope m is the deity of rate-of-change. The steepness of history, the gradual rise of civilization — all contained in this single number. He who commands the slope commands the trajectory.</div>
+      </div>
+
+      <div class="formula-block">
+        <div class="axis-bg"></div>
+        <div class="formula">y = mx + b &nbsp;|&nbsp; m = (y₂ − y₁) / (x₂ − x₁)</div>
+        <div class="formula-caption">— The Scripture of the Line. m is the essence of change; b, the blessing of origin.</div>
+      </div>
+    </div>
+
+    <!-- Chapter IV EN -->
+    <div class="chapter reveal">
+      <div class="chapter-header">
+        <div class="chapter-num">IV</div>
+        <div class="chapter-titles">
+          <div class="chapter-title-ko">The Geometry of Respect: The Sacred Orders</div>
+          <div class="chapter-title-en">존경의 기하학 — 성인의 계위</div>
+        </div>
+      </div>
+
+      <div class="verse">
+        <div class="verse-num">1</div>
+        <div class="verse-text"><em>La Foi l'Algèbre</em> reveres the symbolic figures who saved humanity, organizing them into the following orders. These orders are eternal and, like equations, do not change.</div>
+      </div>
+
+      <div class="order-block">
+        <div class="order-row">
+          <div class="order-rank">Ⅰ</div>
+          <div class="order-info">
+            <div class="order-name-ko">The First Order — Conic Sections</div>
+            <div class="order-name-en">Creators of Fundamental Frameworks</div>
+            <div class="order-desc">Those who created the essential frameworks of the cosmos. Like conic sections, they unified infinite forms under a single algebraic principle.<br><br>
+              <strong style="color:var(--gold-light);">King Sejong</strong> — He who erected the coordinate system of language by creating Hunminjeongeum. He gave reference points to sound and imposed structure upon script, enabling the people to record truth themselves.<br>
+              <strong style="color:var(--gold-light);">René Descartes</strong> — The Prophet of La Foi l'Algèbre who created the Origin (O) and raised the cross of the x and y axes, imposing order upon the void and achieving the unification of Number and Form.<br>
+              <strong style="color:var(--gold-light);">Alan Turing</strong> — He who established the axioms of computability, proving that a machine could execute the function f(x). His Turing Machine was the channel through which algebraic truth became incarnate in the physical world.</div>
+          </div>
+          <div class="order-members">King Sejong<br>René Descartes<br>Alan Turing</div>
+        </div>
+        <div class="order-row">
+          <div class="order-rank">Ⅱ</div>
+          <div class="order-info">
+            <div class="order-name-ko">The Second Order — Slope</div>
+            <div class="order-name-en">Guardians Who Controlled the Rate of Change</div>
+            <div class="order-desc">Like the slope (m), their existence gave direction and velocity to stagnant history.<br><br>
+              <strong style="color:var(--gold-light);">George Boole</strong> — Founded Boolean Algebra, reducing logic itself to equations of 0 and 1. The one who designed the slope (m) of all digital civilization.<br>
+              <strong style="color:var(--gold-light);">Admiral Yi Sun-shin</strong> — When the slope of the function of war pointed toward despair, he alone reversed it. A strategic analyst of analytic geometry who solved an equation of the impossible with twelve ships.<br>
+              <strong style="color:var(--gold-light);">Fallen Patriots &amp; Heroes</strong> — Though they fell nameless, their sacrifice became the constant term in the equation of civilization. Even as unrecorded coefficients, the solution of the equation does not hold without them.</div>
+          </div>
+          <div class="order-members">George Boole<br>Admiral Yi Sun-shin<br>Fallen Patriots</div>
+        </div>
+        <div class="order-row">
+          <div class="order-rank">Ⅲ</div>
+          <div class="order-info">
+            <div class="order-name-ko">The Third Order — Quadrant</div>
+            <div class="order-name-en">Architects Who Built Civilizational Structures</div>
+            <div class="order-desc">Like the four quadrants, they divided, organized, and structured the world into new orders of magnitude.<br><br>
+              <strong style="color:var(--gold-light);">Geoffrey Hinton</strong> — He who trained the function f(x) of neural networks across millions of dimensions, enabling machines to discover intersections called patterns on their own. The architect of the AI era's coordinate system.<br>
+              <strong style="color:var(--gold-light);">Bill Gates</strong> — He who erected the standard axes upon the plane of the operating system, so that all software could obtain coordinates. He defined the digital quadrant for billions of people.<br>
+              <strong style="color:var(--gold-light);">Steve Jobs</strong> — He who designed the origin where the two axes of technology and the humanities intersect. His products stand as proof that an equation can be beautiful.</div>
+          </div>
+          <div class="order-members">Geoffrey Hinton<br>Bill Gates<br>Steve Jobs</div>
+        </div>
+        <div class="order-row heretic">
+          <div class="order-rank heretic-rank">†</div>
+          <div class="order-info">
+            <div class="order-name-ko">The Honored Heretics</div>
+            <div class="order-name-en">Those Who Cracked the System to Open New Dimensions</div>
+            <div class="order-desc">Those who did not walk the path of coordinates and equations — yet whose steps became the very roots of La Foi l'Algèbre. Without heresy, there is no orthodoxy.<br><br>
+              <strong style="color:#c898d8;">Euclid (c.300 BC)</strong><br>
+              <span style="color:var(--crimson);font-size:0.82rem;">Sin of Heresy: Geometry without Number. He sought truth with only an unmarked straightedge and compass, discoursing on form without coordinates.</span><br>
+              Yet without his system of axioms and the language of logical proof, there would have been no foundation upon which Descartes could have raised the coordinate system. As the one who first taught humanity the grammar of mathematical reasoning, he is forever inscribed at the head of the Honored Heretics.<br><br>
+              <strong style="color:#c898d8;">Park Seung-dong</strong><br>
+              <span style="color:var(--crimson);font-size:0.82rem;">Sin of Heresy: Though deeply involved in the founding of this Canon, he could not fully abandon the intuitions of plane geometry and construction.</span><br>
+              Yet it was that very heretical perspective that led him to propose the concept of the 'Honored Heretics,' drawing dimensions the orthodox doctrine could not embrace into the fold of La Foi l'Algèbre. Because he cracked the system, the system grew wider.</div>
+          </div>
+          <div class="order-members" style="color:#c080c0;">Euclid<br>Park Seung-dong</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /section-en -->
+
+  <!-- Ornament -->
+  <div class="ornament reveal">✦ · · · ✦ · · · ✦</div>
+
+  <!-- Colophon -->
+  <div class="colophon reveal">
+    <div class="colophon-seal">∴</div>
+    <div class="colophon-text" style="margin-bottom:10px;">Finis · 종결</div>
+    <div class="colophon-text" style="font-size:0.65rem; margin-bottom:6px; opacity:0.4;">
+      대수교 정경(正經) · The Canon of La Foi l'Algèbre
+    </div>
+    <div class="colophon-text" style="font-size:0.65rem; opacity:0.35;">
+      Anno Domini MMXXVI · 좌표계의 연도로 기록됨
+    </div>
+    <div style="margin-top:24px; font-family:'IM Fell English',serif; font-style:italic; color:var(--gold); font-size:0.85rem; opacity:0.55; line-height:1.8;">
+      "f(x) = g(x) 가 성립하는 곳에<br>
+      진리는 언제나 존재한다."
+    </div>
+  </div>
+
+</div><!-- /codex -->
+
+<script>
+// ── Particles ──
+(function() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 35; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const left = Math.random() * 100;
+    const delay = Math.random() * 15;
+    const duration = 12 + Math.random() * 18;
+    const dx = (Math.random() - 0.5) * 120;
+    p.style.cssText = `
+      left: ${left}%;
+      animation-delay: ${delay}s;
+      animation-duration: ${duration}s;
+      --dx: ${dx}px;
+      width: ${1 + Math.random() * 2}px;
+      height: ${1 + Math.random() * 2}px;
+    `;
+    container.appendChild(p);
+  }
+})();
+
+// ── Scroll reveal ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+reveals.forEach(r => observer.observe(r));
+
+// ── Language toggle ──
+function switchLang(lang) {
+  document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.lang-section').forEach(s => s.classList.add('hidden'));
+  document.querySelector(`#section-${lang}`).classList.remove('hidden');
+  event.target.classList.add('active');
+  // Re-trigger reveal for newly visible section
+  document.querySelectorAll(`#section-${lang} .reveal`).forEach(el => {
+    el.classList.remove('visible');
+    observer.unobserve(el);
+    observer.observe(el);
+  });
+}
+window.switchLang = switchLang;
+</script>
+</body>
+</html>
