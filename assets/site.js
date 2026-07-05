@@ -1,28 +1,13 @@
 /* ═══════════════════════════════════════════════
-   대수교 · La Foi l'Algèbre — Shared Site Script
+   ORDO ALGEBRAE — Shared Script
    ═══════════════════════════════════════════════ */
 
-// ── Ambient floating particles ──
-(function () {
-  if (document.getElementById('particles')) return;
-  const container = document.createElement('div');
-  container.className = 'particles';
-  container.id = 'particles';
-  document.body.prepend(container);
-  for (let i = 0; i < 35; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.cssText = `
-      left: ${Math.random() * 100}%;
-      animation-delay: ${Math.random() * 15}s;
-      animation-duration: ${12 + Math.random() * 18}s;
-      --dx: ${(Math.random() - 0.5) * 120}px;
-      width: ${1 + Math.random() * 2}px;
-      height: ${1 + Math.random() * 2}px;
-    `;
-    container.appendChild(p);
-  }
-})();
+// ── Mobile nav ──
+function toggleNav() {
+  const links = document.querySelector('.nav-links');
+  if (links) links.classList.toggle('open');
+}
+window.toggleNav = toggleNav;
 
 // ── Scroll reveal ──
 (function () {
@@ -30,41 +15,35 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
   document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
-  window.__revealObserver = observer;
 })();
 
-// ── Mobile nav toggle ──
-function toggleNav() {
-  const links = document.querySelector('.nav-links');
-  if (links) links.classList.toggle('open');
-}
-window.toggleNav = toggleNav;
+// ── Tiered access keys ─────────────────────────────────────
+// The word is one: "algebra". The tongue in which you speak it
+// decides how deep the Order lets you descend.
+//   ACCESS I   — the flesh tongue   : plaintext
+//   ACCESS II  — the scribe tongue  : hexadecimal (0x61 6c 67 65 62 72 61)
+//   ACCESS III — the crow tongue    : binary, 8-bit Unicode, 56 bits
+const WORD = 'algebra';
+const KEY_PLAIN = WORD;
+const KEY_HEX = Array.from(WORD).map(c => c.charCodeAt(0).toString(16)).join('');
+const KEY_BIN = Array.from(WORD).map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join('');
 
-// ── Admin authentication ─────────────────────────────
-// The sacred key: the name of the faith, rendered in the
-// binary tongue of George Boole (8-bit Unicode/ASCII).
-// "algebra" → 01100001 01101100 01100111 01100101 01100010 01110010 01100001
-const ADMIN_KEY_BITS = Array.from('algebra')
-  .map(c => c.charCodeAt(0).toString(2).padStart(8, '0'))
-  .join('');
+function classifyKey(input) {
+  const cleaned = String(input).trim().toLowerCase().replace(/[\s,·:|/_-]+/g, '').replace(/^0x/, '');
+  if (cleaned === KEY_BIN) return 3;
+  if (cleaned === KEY_HEX) return 2;
+  if (cleaned === KEY_PLAIN) return 1;
+  return 0;
+}
+window.classifyKey = classifyKey;
 
-function checkAdminKey(input) {
-  const cleaned = String(input).replace(/[\s,·|/-]+/g, '');
-  return /^[01]+$/.test(cleaned) && cleaned === ADMIN_KEY_BITS;
+const TIER_KEY = 'ordo_clearance';
+function currentTier() {
+  const v = parseInt(sessionStorage.getItem(TIER_KEY) || '0', 10);
+  return Number.isFinite(v) ? v : 0;
 }
-window.checkAdminKey = checkAdminKey;
-
-const ADMIN_SESSION_KEY = 'algebra_admin_session';
-function adminSessionActive() {
-  try { return sessionStorage.getItem(ADMIN_SESSION_KEY) === 'granted'; }
-  catch (e) { return false; }
-}
-function grantAdminSession() {
-  try { sessionStorage.setItem(ADMIN_SESSION_KEY, 'granted'); } catch (e) {}
-}
-function revokeAdminSession() {
-  try { sessionStorage.removeItem(ADMIN_SESSION_KEY); } catch (e) {}
-}
-window.adminSessionActive = adminSessionActive;
-window.grantAdminSession = grantAdminSession;
-window.revokeAdminSession = revokeAdminSession;
+function grantTier(t) { try { sessionStorage.setItem(TIER_KEY, String(t)); } catch (e) {} }
+function revokeTier() { try { sessionStorage.removeItem(TIER_KEY); } catch (e) {} }
+window.currentTier = currentTier;
+window.grantTier = grantTier;
+window.revokeTier = revokeTier;

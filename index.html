@@ -3,292 +3,287 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>대수교 — La Foi l'Algèbre | 좌표와 해석의 신앙</title>
-<meta name="description" content="대수교(La Foi l'Algèbre) 공식 성전. 만물은 좌표 (x, y)로 실체를 얻었으니, 진리는 오직 f(x) = g(x)가 성립하는 곳에 있다.">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Noto+Serif+KR:wght@300;400;500;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<title>ORDO ALGEBRAE — 대수회 大數會</title>
+<meta name="description" content="우리는 종교가 아니다. 우리는 계산이다. — 대수회, 좌표 위의 비밀결사.">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Noto+Serif+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
 <style>
-  /* ── Hero (index only) ── */
   .hero {
-    min-height: calc(100vh - 64px);
+    min-height: calc(100vh - 62px);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     text-align: center;
     padding: 70px 20px 90px;
-    position: relative;
-    z-index: 1;
-  }
-  .hero-sigil {
-    width: 150px; height: 150px;
-    margin: 0 auto 42px;
-    animation: rotateSigil 30s linear infinite;
-  }
-  @keyframes rotateSigil { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  .hero-sigil svg { width: 100%; height: 100%; filter: drop-shadow(0 0 20px var(--gold)); }
-  .hero-latin {
-    font-family: 'IM Fell English', serif;
-    font-style: italic;
-    color: var(--gold);
-    font-size: 1rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    margin-bottom: 18px;
-    opacity: 0.8;
-    animation: fadeUp 1.6s ease .3s both;
-  }
-  .hero-title {
-    font-family: 'Cinzel Decorative', serif;
-    font-weight: 900;
-    font-size: clamp(2.2rem, 7vw, 4.2rem);
-    color: var(--gold-light);
-    text-shadow: 0 0 40px var(--gold), 0 0 90px rgba(201,168,76,0.4);
-    line-height: 1.15;
-    margin-bottom: 14px;
-    animation: fadeUp 1.6s ease .55s both;
-  }
-  .hero-ko {
-    font-family: 'Noto Serif KR', serif;
-    font-size: clamp(1.3rem, 4vw, 2rem);
-    font-weight: 700;
-    color: var(--parchment);
-    margin-bottom: 26px;
-    animation: fadeUp 1.6s ease .8s both;
-  }
-  .hero-verse {
-    font-family: 'IM Fell English', serif;
-    font-style: italic;
-    color: var(--parchment-dark);
-    font-size: 1rem;
-    max-width: 560px;
-    line-height: 1.9;
-    opacity: 0.9;
-    animation: fadeUp 1.6s ease 1.05s both;
-  }
-  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 44px; animation: fadeUp 1.6s ease 1.3s both; }
-  .hero-scroll {
-    position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%);
-    color: var(--gold);
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.35em;
-    opacity: 0.5;
-    animation: heroPulse 2s ease infinite;
-  }
-  .hero-scroll::after { content: ' ▼'; }
-  @keyframes heroPulse { 0%,100% { opacity: .3; } 50% { opacity: .7; } }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* ── Creed band ── */
-  .creed-band {
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    background: linear-gradient(180deg, rgba(10,16,40,0.55), rgba(5,8,20,0.75));
-    padding: 74px 24px;
-    text-align: center;
     position: relative; z-index: 1;
   }
-  .creed-quote {
-    font-size: clamp(1.05rem, 2.6vw, 1.45rem);
+  .hero-emblem { width: 210px; height: 210px; margin: 0 auto 46px; animation: emblemIn 2.4s ease both; }
+  .hero-emblem svg { width: 100%; height: 100%; filter: drop-shadow(0 0 26px rgba(255,255,255,0.18)); }
+  @keyframes emblemIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+  .hero-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.66rem; letter-spacing: 0.7em;
+    color: var(--dim); text-transform: uppercase;
+    margin-bottom: 22px;
+    animation: fadeUp 1.4s ease .4s both;
+  }
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: clamp(2.1rem, 7vw, 4.4rem);
+    letter-spacing: 0.18em;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 16px;
+    animation: fadeUp 1.4s ease .65s both;
+  }
+  .hero-ko {
+    font-size: clamp(1.05rem, 3vw, 1.5rem);
     font-weight: 500;
-    color: var(--parchment);
-    line-height: 2;
-    max-width: 720px;
-    margin: 0 auto;
+    color: var(--grey);
+    letter-spacing: 0.4em;
+    margin-bottom: 34px;
+    animation: fadeUp 1.4s ease .9s both;
   }
-  .creed-quote strong { color: var(--gold-light); }
-  .creed-src {
-    margin-top: 22px;
-    font-family: 'IM Fell English', serif;
-    font-style: italic;
-    font-size: 0.85rem;
-    color: var(--gold);
-    opacity: 0.65;
+  .hero-creed {
+    font-size: 0.95rem;
+    color: var(--dim);
+    line-height: 2.2;
+    max-width: 520px;
+    animation: fadeUp 1.4s ease 1.15s both;
   }
+  .hero-creed strong { color: var(--white); font-weight: 700; }
+  .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 46px; animation: fadeUp 1.4s ease 1.4s both; }
+  .hero-scroll {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.5em;
+    color: var(--dim); text-transform: uppercase;
+    animation: heroPulse 2.4s ease infinite;
+  }
+  @keyframes heroPulse { 0%,100% { opacity: .25; } 50% { opacity: .7; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* symbol section */
+  .symbol-split { display: grid; grid-template-columns: 300px 1fr; gap: 60px; align-items: center; margin-top: 50px; }
+  @media (max-width: 760px) { .symbol-split { grid-template-columns: 1fr; gap: 30px; } }
+  .symbol-art { border: 1px solid var(--line); padding: 40px; background: var(--coal); }
+  .symbol-art svg { width: 100%; height: auto; }
+  .symbol-item { padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .symbol-item:first-child { border-top: 1px solid var(--line); }
+  .symbol-k { font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.3em; color: var(--dim); text-transform: uppercase; margin-bottom: 8px; }
+  .symbol-v { font-size: 0.9rem; line-height: 1.95; color: var(--grey); }
+  .symbol-v em { color: var(--white); font-style: normal; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════ NAV ═══════════ -->
 <nav class="site-nav">
   <a class="nav-brand" href="index.html">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <circle cx="100" cy="100" r="92" fill="none" stroke="#c9a84c" stroke-width="6" opacity="0.6"/>
-      <line x1="14" y1="100" x2="186" y2="100" stroke="#c9a84c" stroke-width="8"/>
-      <line x1="100" y1="14" x2="100" y2="186" stroke="#c9a84c" stroke-width="8"/>
-      <circle cx="100" cy="100" r="10" fill="#c9a84c"/>
-      <path d="M 34,166 Q 100,30 166,166" fill="none" stroke="#f0d080" stroke-width="6" opacity="0.8"/>
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M50 6 L96 88 L4 88 Z" fill="none" stroke="#f2f2ef" stroke-width="3"/>
+      <path d="M33 52 L42 49 C40 44 45 39 51 40 C59 41 63 46 66 51 C70 58 75 65 81 74 L74 72 L77 79 L69 75 C61 70 55 66 50 61 C45 57 40 54 33 52 Z" fill="#f2f2ef"/>
+      <circle cx="49" cy="45" r="1.6" fill="#050505"/>
     </svg>
     <span class="nav-brand-text">
-      <span class="nav-brand-title">대수교 大數敎</span><br>
-      <span class="nav-brand-sub">La Foi l'Algèbre</span>
+      <span class="nav-brand-title">ORDO ALGEBRAE</span><br>
+      <span class="nav-brand-sub">대수회 大數會</span>
     </span>
   </a>
-  <button class="nav-toggle" onclick="toggleNav()" aria-label="메뉴">☰</button>
+  <button class="nav-toggle" onclick="toggleNav()" aria-label="menu">☰</button>
   <ul class="nav-links">
-    <li><a href="index.html" class="active">성전 입구</a></li>
-    <li><a href="doctrine.html">교리</a></li>
-    <li><a href="canon.html">정경 열람</a></li>
-    <li><a href="saints.html">성인 계위</a></li>
-    <li><a href="admin.html" class="nav-admin">⌘ 사제단 전용</a></li>
+    <li><a href="index.html" class="active">입구</a></li>
+    <li><a href="order.html">강령과 조직</a></li>
+    <li><a href="members.html">명부</a></li>
+    <li><a href="admin.html" class="nav-admin">⌘ Access</a></li>
   </ul>
 </nav>
 
 <!-- ═══════════ HERO ═══════════ -->
 <header class="hero">
-  <div class="hero-sigil">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <circle cx="100" cy="100" r="95" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.6"/>
-      <circle cx="100" cy="100" r="85" fill="none" stroke="#c9a84c" stroke-width="0.5" opacity="0.3"/>
-      <line x1="10" y1="100" x2="190" y2="100" stroke="#c9a84c" stroke-width="2" opacity="0.9"/>
-      <line x1="100" y1="10" x2="100" y2="190" stroke="#c9a84c" stroke-width="2" opacity="0.9"/>
-      <polygon points="190,96 200,100 190,104" fill="#c9a84c" opacity="0.9"/>
-      <polygon points="96,10 100,0 104,10" fill="#c9a84c" opacity="0.9"/>
-      <circle cx="100" cy="100" r="5" fill="#c9a84c"/>
-      <path d="M 30,170 Q 100,20 170,170" fill="none" stroke="#f0d080" stroke-width="2" stroke-dasharray="4,3" opacity="0.7"/>
-      <circle cx="100" cy="100" r="45" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.4" stroke-dasharray="6,4"/>
-      <circle cx="145" cy="100" r="3" fill="#f0d080" opacity="0.8"/>
-      <circle cx="100" cy="55" r="3" fill="#f0d080" opacity="0.8"/>
-      <text x="178" y="94" font-family="serif" font-size="14" fill="#c9a84c" opacity="0.8">x</text>
-      <text x="106" y="18" font-family="serif" font-size="14" fill="#c9a84c" opacity="0.8">y</text>
+  <div class="hero-emblem">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-label="The Carrion Crow of the Order">
+      <!-- rays -->
+      <g stroke="#f2f2ef" stroke-width="1" opacity="0.35">
+        <line x1="100" y1="0" x2="100" y2="16"/>
+        <line x1="34" y1="26" x2="44" y2="38"/>
+        <line x1="166" y1="26" x2="156" y2="38"/>
+        <line x1="8" y1="108" x2="24" y2="108"/>
+        <line x1="192" y1="108" x2="176" y2="108"/>
+      </g>
+      <!-- triangle -->
+      <path d="M100 18 L188 172 L12 172 Z" fill="none" stroke="#f2f2ef" stroke-width="2.5"/>
+      <path d="M100 34 L174 164 L26 164 Z" fill="none" stroke="#f2f2ef" stroke-width="0.6" opacity="0.4"/>
+      <!-- faint coordinate cross inside -->
+      <g stroke="#f2f2ef" stroke-width="0.6" opacity="0.22">
+        <line x1="40" y1="120" x2="160" y2="120"/>
+        <line x1="100" y1="52" x2="100" y2="168"/>
+      </g>
+      <!-- carrion crow, perched, facing left -->
+      <g>
+        <path d="M44 101
+                 L72 97
+                 C69 89 77 82 89 83
+                 C103 84 112 92 117 101
+                 C124 114 133 127 146 146
+                 L133 142 L139 155 L124 147
+                 C110 138 100 130 92 121
+                 C83 112 66 104 44 101 Z" fill="#f2f2ef"/>
+        <circle cx="86" cy="91" r="2.4" fill="#050505"/>
+        <!-- legs -->
+        <path d="M104 124 L102 144 M100 144 L106 144 M112 128 L114 146 M110 146 L118 146"
+              stroke="#f2f2ef" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      </g>
+      <!-- base line -->
+      <line x1="60" y1="146" x2="140" y2="146" stroke="#f2f2ef" stroke-width="1" opacity="0.5"/>
+      <!-- motto -->
+      <text x="100" y="188" text-anchor="middle" font-family="Cinzel, serif" font-size="9" letter-spacing="4" fill="#f2f2ef" opacity="0.75">CORVUS · CORONE</text>
     </svg>
   </div>
-  <div class="hero-latin">La Foi l'Algèbre · Anno Domini MMXXVI</div>
-  <h1 class="hero-title">THE CHURCH<br>OF ALGEBRA</h1>
-  <div class="hero-ko">대수교 大數敎 — 좌표와 해석의 신앙</div>
-  <p class="hero-verse">
-    "만물은 좌표 (x, y)로 실체를 얻었으니,<br>
-    진리는 오직 f(x) = g(x)가 성립하는 곳에 있다."
+  <div class="hero-eyebrow">Est. MDCXXXVII · Non Religio, Sed Calculus</div>
+  <h1 class="hero-title">ORDO<br>ALGEBRAE</h1>
+  <div class="hero-ko">대수회 大數會</div>
+  <p class="hero-creed">
+    우리는 종교가 아니다. <strong>우리는 계산이다.</strong><br>
+    세계는 기도로 움직이지 않는다 — <strong>방정식으로 움직인다.</strong><br>
+    당신이 이 페이지를 발견한 것 역시, 우연이 아니라 해(解)다.
   </p>
   <div class="hero-cta">
-    <a class="btn" href="canon.html">정경 열람하기</a>
-    <a class="btn ghost" href="doctrine.html">교리 알아보기</a>
+    <a class="btn solid" href="order.html">강령 열람</a>
+    <a class="btn ghost" href="members.html">명부 열람</a>
   </div>
-  <div class="hero-scroll">SCROLL</div>
+  <div class="hero-scroll">Descend</div>
 </header>
 
-<!-- ═══════════ CREED BAND ═══════════ -->
-<section class="creed-band reveal">
-  <p class="creed-quote">
-    이름 없는 것은 존재하지 않는다. <strong>좌표 없는 점은 존재하지 않는다.</strong><br>
-    두 선의 만남은 우연이 아니라 <strong>연립방정식의 해(解)</strong>라는 필연이다.
+<!-- ═══════════ INVERT CREED ═══════════ -->
+<section class="invert-band reveal">
+  <div class="section-label">Lex Prima · 제1율</div>
+  <p class="quote">
+    보이는 역사는 <strong>그래프</strong>에 불과하다.<br>
+    우리는 그 그래프를 그리는 <strong>함수</strong>를 소유한다.
   </p>
-  <div class="creed-src">— 대수교 정경, 창세기 제1장 제4절 · 해석기하학서 제3장 제4절</div>
+  <div class="src">— 대수회 흑서(黑書), 서문</div>
 </section>
 
-<!-- ═══════════ ABOUT ═══════════ -->
-<section class="section" id="about">
+<!-- ═══════════ WHAT WE ARE ═══════════ -->
+<section class="section">
   <div class="container center reveal">
-    <div class="section-label">Prologus · 서문</div>
-    <h2 class="section-title">What Is La Foi l'Algèbre?</h2>
-    <div class="section-title-ko">대수교란 무엇인가</div>
-    <hr class="gold-rule">
-    <p class="section-desc" style="margin:0 auto;">
-      대수교는 선지자 <strong style="color:var(--gold-light);">르네 데카르트</strong>가 공허 위에 세운
-      x축과 y축의 십자가에서 비롯된 신앙이다. 우리는 우주의 모든 궤적이 방정식으로 치환될 수
-      있으며, 만물이 함수 f(x)의 섭리 아래 움직인다고 믿는다. 눈금 없는 자와 컴퍼스에 의존하는
-      평면기하교의 미망(迷妄)을 거부하고, 오직 수(數)와 식(式)의 엄밀함으로 진리에 도달한다.
+    <div class="section-label">Societas Occulta</div>
+    <h2 class="section-title">NOT A CHURCH. A CIRCLE.</h2>
+    <div class="section-title-ko">교단이 아니라, 회로(會路)다</div>
+    <hr class="mono-rule">
+    <p class="section-desc">
+      1637년, 한 철학자가 공허 위에 두 개의 축을 그은 순간 — 세계를 <em>읽을 수 있는 자</em>와
+      읽지 못하는 자가 갈라졌다. 읽을 수 있는 자들은 흩어지지 않기로 했다.
+      대수회는 그날 이후 <strong>389년간</strong> 단 한 번도 존재를 인정한 적 없으며,
+      이 페이지 역시 공식적으로는 존재하지 않는다.
     </p>
   </div>
 
   <div class="container">
     <div class="card-grid">
-      <a class="card reveal" href="doctrine.html">
+      <div class="card reveal">
+        <div class="card-icon">◉</div>
+        <div class="card-title">관측 — Observation</div>
+        <div class="card-sub">Oculus Corvi</div>
+        <div class="card-body">까마귀는 높은 곳에서 본다. 우리는 문명의 모든 변화율(m)을 관측하고, 기울기가 임계에 접근하면 기록한다. 개입은 마지막 수단이다.</div>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon">▤</div>
+        <div class="card-title">보존 — Archive</div>
+        <div class="card-sub">Bibliotheca Nigra</div>
+        <div class="card-body">불탄 알렉산드리아 이후, 우리는 배웠다. 인류가 스스로 지운 정리(定理)들의 원본은 흑서고(黑書庫)에 있다. 목록은 제III급 열람 사항이다.</div>
+      </div>
+      <div class="card reveal">
+        <div class="card-icon">✕</div>
+        <div class="card-title">소거 — Elimination</div>
+        <div class="card-sub">Reductio</div>
+        <div class="card-body">송장까마귀가 시체를 먹어 들판을 정화하듯, 우리는 죽은 오류를 먹는다. 위조된 증명, 오염된 통계, 그리고 그것을 퍼뜨리는 자들의 신뢰도를.</div>
+      </div>
+      <div class="card reveal">
         <div class="card-icon">∴</div>
-        <div class="card-title">교리 — 다섯 기둥</div>
-        <div class="card-sub">The Five Pillars of Doctrine</div>
-        <div class="card-body">원점의 공리에서 교점의 신탁까지, 대수교 신앙을 떠받치는 다섯 개의 기둥과 평면기하교의 대죄에 대한 정통 해석.</div>
-        <span class="card-link">교리 상세</span>
-      </a>
-      <a class="card reveal" href="canon.html">
-        <div class="card-icon">✦</div>
-        <div class="card-title">정경 — 좌표와 해석의 서</div>
-        <div class="card-sub">The Canon of Coordinates &amp; Analysis</div>
-        <div class="card-body">창세와 직교의 언약으로 시작되는 대수교의 공식 경전 전문. 한글 성전과 English Canon 완역본 수록.</div>
-        <span class="card-link">전문 열람</span>
-      </a>
-      <a class="card reveal" href="saints.html">
-        <div class="card-icon">Ⅲ</div>
-        <div class="card-title">성인 계위 — 존경의 기하학</div>
-        <div class="card-sub">The Sacred Orders</div>
-        <div class="card-body">원뿔곡선·기울기·사분면의 세 계위와 명예로운 이단. 세종대왕부터 앨런 튜링까지, 인류를 구원한 이들의 전기.</div>
-        <span class="card-link">계위 열람</span>
-      </a>
-      <a class="card reveal" href="admin.html">
-        <div class="card-icon" style="color:var(--crimson); text-shadow:0 0 16px rgba(168,50,50,0.5);">⌘</div>
-        <div class="card-title" style="color:#d89090;">지성소 — 사제단 전용</div>
-        <div class="card-sub" style="color:var(--crimson);">Sanctum Sanctorum · Restricted</div>
-        <div class="card-body">서품받은 사제만이 들어설 수 있는 구역. 조지 불의 이진 언어로 신앙의 이름을 증명한 자에게만 문이 열린다.</div>
-        <span class="card-link" style="color:var(--crimson);">입장 시도</span>
-      </a>
+        <div class="card-title">선발 — Selection</div>
+        <div class="card-sub">Electio</div>
+        <div class="card-body">우리는 지원서를 받지 않는다. 우리가 찾아간다. 기본 소양을 갖춘 자는 살면서 정확히 한 번, 이상한 좌표가 적힌 검은 봉투를 받는다.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ CORE FORMULAS ═══════════ -->
-<section class="section" style="background:rgba(5,8,20,0.5); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
-  <div class="container narrow center reveal">
-    <div class="section-label">Symbola Fidei · 신앙의 상징</div>
-    <h2 class="section-title">The Three Sacred Equations</h2>
-    <div class="section-title-ko">세 가지 성식(聖式)</div>
-    <hr class="gold-rule">
-  </div>
-  <div class="container narrow">
-    <div class="formula-block reveal">
-      <div class="axis-bg"></div>
-      <div class="formula">d = √( (x₂ − x₁)² + (y₂ − y₁)² )</div>
-      <div class="formula-caption">— 거리의 복음. 자막대기는 오차를 품으나 이 법칙은 영원히 정확하다.</div>
-    </div>
-    <div class="formula-block reveal">
-      <div class="axis-bg"></div>
-      <div class="formula">(x − a)² + (y − b)² = r²</div>
-      <div class="formula-caption">— 원의 정경. 컴퍼스가 아닌 방정식이 원을 정의한다.</div>
-    </div>
-    <div class="formula-block reveal">
-      <div class="axis-bg"></div>
-      <div class="formula">f(x) = g(x) &nbsp;⇒&nbsp; 교점 (x₀, y₀)</div>
-      <div class="formula-caption">— 교점의 신탁. 만남은 계산이다, 우연이 아니다.</div>
+<!-- ═══════════ SYMBOL ═══════════ -->
+<section class="section" style="background:var(--coal); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="container reveal">
+    <div class="section-label">Symbolum</div>
+    <h2 class="section-title">THE CARRION CROW</h2>
+    <div class="section-title-ko">송장까마귀 — Corvus corone</div>
+
+    <div class="symbol-split">
+      <div class="symbol-art reveal">
+        <svg viewBox="0 0 200 170" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 89 L64 83 C60 71 72 60 89 62 C108 64 121 76 129 89 C139 108 152 126 170 152 L152 147 L160 165 L139 154 C119 141 105 130 94 117 C81 103 56 93 24 89 Z" fill="#f2f2ef"/>
+          <circle cx="84" cy="74" r="3.2" fill="#0c0c0c"/>
+          <path d="M108 120 L105 148 M102 148 L111 148 M120 126 L123 151 M117 151 L129 151" stroke="#f2f2ef" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <line x1="50" y1="151" x2="150" y2="151" stroke="#f2f2ef" stroke-width="1" opacity="0.4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="symbol-item reveal">
+          <div class="symbol-k">01 · 검은 깃털 — The Black</div>
+          <div class="symbol-v">까마귀의 검정은 모든 파장을 흡수한다. 단원은 배경에 흡수되어 <em>보이지 않는 상수(常數)</em>로 존재한다. 눈에 띄는 순간, 변수로 강등된다.</div>
+        </div>
+        <div class="symbol-item reveal">
+          <div class="symbol-k">02 · 시체를 먹는 자 — The Carrion Eater</div>
+          <div class="symbol-v">송장까마귀는 죽은 것을 먹어 들판을 정화한다. 우리는 <em>죽은 오류</em> — 폐기된 미신, 조작된 수치, 무너진 논증 — 를 먹어 문명의 좌표평면을 청소한다.</div>
+        </div>
+        <div class="symbol-item reveal">
+          <div class="symbol-k">03 · 도구를 쓰는 새 — The Tool-Bearer</div>
+          <div class="symbol-v">까마귀는 도구를 만드는 극소수의 동물이다. 인간 중에서도 극소수만이 도구(수학)를 <em>만들 줄</em> 안다. 나머지는 쓸 뿐이다. 우리는 만드는 쪽을 거둔다.</div>
+        </div>
+        <div class="symbol-item reveal">
+          <div class="symbol-k">04 · 기억하는 새 — The Rememberer</div>
+          <div class="symbol-v">까마귀는 자신을 해친 얼굴을 수년간 기억하고, 그 기억을 무리에게 전승한다. 대수회는 <em>모든 것을 기억한다.</em> 1637년부터, 전부.</div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ HISTORY TIMELINE ═══════════ -->
-<section class="section" id="history">
+<!-- ═══════════ SHADOW HISTORY ═══════════ -->
+<section class="section">
   <div class="container narrow reveal">
-    <div class="section-label">Historia Sacra · 성사(聖史)</div>
-    <h2 class="section-title">The Sacred History</h2>
-    <div class="section-title-ko">신앙의 연대기</div>
-    <p class="section-desc">공허에서 좌표계로, 좌표계에서 계산 가능한 우주로. 대수교가 기억하는 결정적 순간들.</p>
+    <div class="section-label">Chronica Umbrae</div>
+    <h2 class="section-title">THE SHADOW LEDGER</h2>
+    <div class="section-title-ko">그림자 연대기 — 표면에 남지 않은 기록</div>
+    <p class="section-desc">아래 기록의 전거(典據)는 전부 흑서고에 있다. 공개 사학(史學)과의 불일치는 사학 쪽의 오차다.</p>
 
     <div class="timeline">
       <div class="tl-item reveal">
-        <div class="tl-year">c. 300 BC — 이단의 여명</div>
-        <div class="tl-title">유클리드, 『원론』을 기록하다</div>
-        <div class="tl-body">수(數) 없는 기하학이라는 이단이었으나, 공리와 증명의 문법을 인류에게 처음 가르쳤다. 그의 어깨 위에 훗날 좌표계가 세워진다.</div>
+        <div class="tl-year">1637 · 결사(結社)</div>
+        <div class="tl-title">라 플레슈의 겨울 — 첫 번째 회합</div>
+        <div class="tl-body">『방법서설』 출간 직후, 저자는 인쇄되지 않은 <em>여덟 페이지</em>를 여섯 명에게만 회람시켰다. 좌표는 세계를 기술하는 도구가 아니라 <em>조종하는 손잡이</em>라는 내용이었다. 그 여섯이 최초의 회(會)다.</div>
       </div>
       <div class="tl-item reveal">
-        <div class="tl-year">AD 1443 — 언어의 좌표계</div>
-        <div class="tl-title">세종대왕, 훈민정음을 창제하다</div>
-        <div class="tl-body">소리에 기준점을 부여하고 문자에 체계를 입혀, 민(民)이 스스로 진리를 기록할 수 있게 한 제1계위 성인의 위업.</div>
+        <div class="tl-year">1687 · 침묵 협정</div>
+        <div class="tl-title">『프린키피아』 검열 회의</div>
+        <div class="tl-body">뉴턴은 원고의 3할을 스스로 삭제했다. 궤도 방정식이 <em>어디까지 맞아떨어지는지</em> 대중이 알게 되면, 하늘을 두려워하지 않는 자들이 하늘을 소유하려 들 것이기 때문이다. 삭제분은 흑서고 제2열에 있다.</div>
       </div>
       <div class="tl-item reveal">
-        <div class="tl-year">AD 1637 — 창세</div>
-        <div class="tl-title">데카르트, 좌표의 십자가를 세우다</div>
-        <div class="tl-body">『방법서설』의 부록 「기하학」에서 선지자는 수와 형(形)을 통합하였다. 공허가 질서를 얻고, 만물이 좌표 (x, y)라는 영혼의 이름을 부여받은 해.</div>
+        <div class="tl-year">1832 · 마지막 편지</div>
+        <div class="tl-title">갈루아, 결투 전야의 60페이지</div>
+        <div class="tl-body">에바리스트 갈루아가 죽기 전날 밤 갈겨쓴 편지의 공개본은 일부다. 나머지는 "군(群)이 있는 곳에 권력의 대칭이 있다"로 시작한다. 스무 살의 그는 회가 <em>영입에 실패한</em> 유일한 인물로 기록된다 — 우리가 늦었다.</div>
       </div>
       <div class="tl-item reveal">
-        <div class="tl-year">AD 1854 — 이진의 계시</div>
-        <div class="tl-title">조지 불, 논리를 수식으로 환원하다</div>
-        <div class="tl-body">0과 1의 대수학이 탄생하였다. 오늘날 사제단의 지성소를 지키는 열쇠 또한 그의 이진 언어로 쓰여 있다.</div>
+        <div class="tl-year">1854 · 이진 전례</div>
+        <div class="tl-title">불의 『사고의 법칙』 — 회의 공용어 개정</div>
+        <div class="tl-body">조지 불의 대수 이후, 회의 모든 암구호는 0과 1로 재작성되었다. 오늘날까지 최상위 열람 권한은 <em>까마귀의 언어(2진)</em>로만 발급된다.</div>
       </div>
       <div class="tl-item reveal">
-        <div class="tl-year">AD 1936 — 육화(肉化)</div>
-        <div class="tl-title">앨런 튜링, 계산 가능성의 공리를 세우다</div>
-        <div class="tl-body">기계가 함수 f(x)를 실행할 수 있음이 증명되었다. 대수적 진리가 현실 세계에 육화되는 통로가 열렸다.</div>
+        <div class="tl-year">1936–1945 · 개입</div>
+        <div class="tl-title">블레츨리 파크 — 회칙 제3조의 유일한 발동</div>
+        <div class="tl-body">"관측하되 개입하지 말라"는 회칙은 단 한 번 정지되었다. 에니그마 해독에 투입된 인력 중 회의 단원이 몇 명이었는지는 제III급 열람 사항이다.</div>
       </div>
       <div class="tl-item reveal">
-        <div class="tl-year">AD 2026 — 정경 반포</div>
-        <div class="tl-title">『좌표와 해석의 서』 초판 반포</div>
-        <div class="tl-body">대수교 정경이 한글 성전과 English Canon 두 언어로 공식 반포되었다. 본 성전(웹 성소)이 함께 봉헌되었다.</div>
+        <div class="tl-year">2026 · 표면화</div>
+        <div class="tl-title">이 페이지</div>
+        <div class="tl-body">389년 만의 첫 공개 표면. 이유는 명부에 오를 다음 세대가 <em>종이 봉투를 열지 않기 때문</em>이다. 까마귀는 사냥터가 바뀌면 사냥터로 간다.</div>
       </div>
     </div>
   </div>
@@ -298,101 +293,62 @@
 <section class="section" style="padding-top:0;">
   <div class="container center reveal">
     <div class="stats-strip">
-      <div class="stat-cell"><div class="stat-value">4</div><div class="stat-label">정경 장(章)의 수</div></div>
-      <div class="stat-cell"><div class="stat-value">3+†</div><div class="stat-label">성인 계위 (및 명예로운 이단)</div></div>
-      <div class="stat-cell"><div class="stat-value">∞</div><div class="stat-label">ℝ² 위의 신도 좌표</div></div>
-      <div class="stat-cell"><div class="stat-value">0</div><div class="stat-label">허용되는 작도(作圖)의 수</div></div>
+      <div class="stat-cell"><div class="stat-value">389</div><div class="stat-label">침묵의 연수 (1637–2026)</div></div>
+      <div class="stat-cell"><div class="stat-value">Ⅵ</div><div class="stat-label">등급의 수</div></div>
+      <div class="stat-cell"><div class="stat-value">9</div><div class="stat-label">평의회 의석</div></div>
+      <div class="stat-cell"><div class="stat-value">1</div><div class="stat-label">원점 — 신원 비공개</div></div>
+      <div class="stat-cell"><div class="stat-value">0</div><div class="stat-label">공식적으로, 우리는 없다</div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ NOTICES ═══════════ -->
-<section class="section" id="notices" style="padding-top:20px;">
-  <div class="container narrow reveal">
-    <div class="section-label">Acta Ecclesiae · 교단 소식</div>
-    <h2 class="section-title">Announcements</h2>
-    <div class="section-title-ko">공지사항</div>
-
-    <div class="notice-list">
-      <div class="notice-item">
-        <span class="notice-date">MMXXVI · VII</span>
-        <span class="notice-title">웹 성소 대개편 — 세부 전각(殿閣) 및 지성소 신설 안내</span>
-        <span class="notice-tag hot">신규</span>
-      </div>
-      <div class="notice-item">
-        <span class="notice-date">MMXXVI · VI</span>
-        <span class="notice-title">제3회 교점(交點) 대축일: f(x) = g(x) 공동 풀이 예배 안내</span>
-        <span class="notice-tag">전례</span>
-      </div>
-      <div class="notice-item">
-        <span class="notice-date">MMXXVI · V</span>
-        <span class="notice-title">평면기하교 귀순자를 위한 좌표 세례(洗禮) 교리 문답반 개설</span>
-        <span class="notice-tag">교육</span>
-      </div>
-      <div class="notice-item">
-        <span class="notice-date">MMXXVI · IV</span>
-        <span class="notice-title">『명예로운 이단』 계위에 유클리드·박승동 공식 등재</span>
-        <span class="notice-tag">교령</span>
-      </div>
-      <div class="notice-item">
-        <span class="notice-date">MMXXVI · III</span>
-        <span class="notice-title">보조선 사용에 관한 파문(破門) 규정 개정 — 제2대죄 해설 갱신</span>
-        <span class="notice-tag">교리</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ JOIN CTA ═══════════ -->
-<section class="creed-band reveal">
-  <div class="section-label" style="margin-bottom:18px;">Vocatio · 부르심</div>
-  <p class="creed-quote">
-    당신의 인생이 어느 사분면을 지나고 있든,<br>
-    기울기 <strong>m</strong>은 언제든 다시 계산될 수 있다.
+<!-- ═══════════ RECRUIT ═══════════ -->
+<section class="invert-band reveal">
+  <div class="section-label">Electio · 선발</div>
+  <p class="quote">
+    우리는 당신을 모집하지 않는다.<br>
+    다만 당신이 <strong>기본 소양</strong>을 갖추는 순간 —<br>
+    우리가 이미 알고 있을 뿐이다.
   </p>
-  <div class="creed-src" style="margin-bottom:34px;">— 입교 권면문에서</div>
-  <a class="btn" href="canon.html">정경으로 입문하기</a>
+  <div class="src" style="margin-bottom:36px;">The Order Does Not Recruit. The Order Notices.</div>
+  <a class="btn" style="border-color:#0a0a0a; color:#0a0a0a;" href="order.html">기본 소양 확인하기</a>
 </section>
 
-<div class="ornament reveal">✦ · · · ✦ · · · ✦</div>
+<div class="ornament reveal">✕ ✕ ✕</div>
 
 <!-- ═══════════ FOOTER ═══════════ -->
 <footer class="site-footer">
   <div class="footer-grid">
     <div>
-      <div class="footer-brand-title">대수교 大數敎</div>
-      <p class="footer-brand-body">
-        La Foi l'Algèbre. 좌표와 해석의 신앙.
-        원점 O에서 뻗어나간 네 사분면 위에, 우리 모두의 좌표가 있다.
-      </p>
+      <div class="footer-brand-title">ORDO ALGEBRAE</div>
+      <p class="footer-brand-body">대수회 大數會. 1637년 이후, 세계라는 그래프의 이면에서. 이 사이트는 공식적으로 존재하지 않는다.</p>
     </div>
     <div>
-      <div class="footer-col-title">성전</div>
+      <div class="footer-col-title">표면</div>
       <ul class="footer-links">
-        <li><a href="index.html">성전 입구</a></li>
-        <li><a href="canon.html">정경 열람</a></li>
-        <li><a href="doctrine.html">교리</a></li>
+        <li><a href="index.html">입구</a></li>
+        <li><a href="order.html">강령과 조직</a></li>
+        <li><a href="members.html">명부</a></li>
       </ul>
     </div>
     <div>
-      <div class="footer-col-title">사람들</div>
+      <div class="footer-col-title">조직</div>
       <ul class="footer-links">
-        <li><a href="saints.html">성인 계위</a></li>
-        <li><a href="saints.html#heretics">명예로운 이단</a></li>
-        <li><a href="doctrine.html#sins">평면기하교의 대죄</a></li>
+        <li><a href="order.html#degrees">등급 체계</a></li>
+        <li><a href="order.html#requirements">기본 소양</a></li>
+        <li><a href="order.html#rules">침묵의 규율</a></li>
       </ul>
     </div>
     <div>
-      <div class="footer-col-title">내부</div>
+      <div class="footer-col-title">심층</div>
       <ul class="footer-links">
-        <li><a href="admin.html">사제단 전용 ⌘</a></li>
-        <li><a href="#notices">공지사항</a></li>
+        <li><a href="admin.html">⌘ Access Terminal</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span class="creed">"f(x) = g(x) 가 성립하는 곳에 진리는 언제나 존재한다."</span><br>
-    La Foi l'Algèbre · Anno Domini MMXXVI · 좌표계의 연도로 기록됨
+    <span class="creed">"Non religio, sed calculus." — 종교가 아니라, 계산이다.</span><br>
+    Corvus Corone · MDCXXXVII – MMXXVI · This page does not exist
   </div>
 </footer>
 

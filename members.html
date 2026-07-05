@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>명부 — Registry of the Order | ORDO ALGEBRAE</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Noto+Serif+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-brand" href="index.html">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M50 6 L96 88 L4 88 Z" fill="none" stroke="#f2f2ef" stroke-width="3"/>
+      <path d="M33 52 L42 49 C40 44 45 39 51 40 C59 41 63 46 66 51 C70 58 75 65 81 74 L74 72 L77 79 L69 75 C61 70 55 66 50 61 C45 57 40 54 33 52 Z" fill="#f2f2ef"/>
+      <circle cx="49" cy="45" r="1.6" fill="#050505"/>
+    </svg>
+    <span class="nav-brand-text">
+      <span class="nav-brand-title">ORDO ALGEBRAE</span><br>
+      <span class="nav-brand-sub">대수회 大數會</span>
+    </span>
+  </a>
+  <button class="nav-toggle" onclick="toggleNav()" aria-label="menu">☰</button>
+  <ul class="nav-links">
+    <li><a href="index.html">입구</a></li>
+    <li><a href="order.html">강령과 조직</a></li>
+    <li><a href="members.html" class="active">명부</a></li>
+    <li><a href="admin.html" class="nav-admin">⌘ Access</a></li>
+  </ul>
+</nav>
+
+<header class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Surface</a> / Registrum</div>
+    <div class="section-label">Registrum · 명부</div>
+    <h1 class="section-title">REGISTRY OF THE ORDER</h1>
+    <div class="section-title-ko">공개 열람분 — 사후(死後) 해제 인사에 한함</div>
+    <hr class="mono-rule">
+    <p class="section-desc" style="margin:0 auto; text-align:center;">
+      회칙 제3율에 따라 단원의 이름은 생전에 공개되지 않는다. 아래 명부는 사후 100년 경과
+      또는 평의회 의결로 <em>봉인 해제된 인사</em>에 한한다. 생존 단원 명부는 ACCESS Ⅱ 이상의
+      열람 사항이다.
+    </p>
+  </div>
+</header>
+
+<!-- ═══ PRECURSORS ═══ -->
+<section class="section" style="padding-bottom:50px;">
+  <div class="container reveal">
+    <div class="section-label">Ante Ordinem · 결사 이전</div>
+    <h2 class="section-title">THE PRECURSORS</h2>
+    <div class="section-title-ko">선구자 — 회는 이들을 소급하여 명부에 올렸다</div>
+
+    <div class="dossier-grid">
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Retroactive</div>
+        <div class="dossier-code">FILE № 0000-A · CODENAME: <strong>LUX</strong></div>
+        <div class="dossier-name">히파티아 Hypatia</div>
+        <div class="dossier-era">c.360 – 415 · Alexandria</div>
+        <div class="dossier-body">알렉산드리아의 마지막 수학 강사. 원뿔곡선 주해로 군중이 이해하지 못하는 것을 가르쳤고, 군중은 이해하지 못하는 자를 살해했다. 회의 제1율 — <em>"회에 대해 묻는 자에게, 회는 없다"</em> — 는 그녀의 죽음에서 나왔다. 드러난 지성은 표적이 된다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Retroactive</div>
+        <div class="dossier-code">FILE № 0000-B · CODENAME: <strong>RADIX</strong></div>
+        <div class="dossier-name">알콰리즈미 al-Khwārizmī</div>
+        <div class="dossier-era">c.780 – 850 · Baghdad · House of Wisdom</div>
+        <div class="dossier-body">회의 이름이 그의 책에서 왔다 — <em>al-jabr(복원)</em>, 곧 algebra. 부서진 것을 항을 옮겨 복원하는 기술. 회가 하는 일의 정의이기도 하다. '알고리즘'이라는 단어 또한 그의 이름의 와전이니, 우리는 그의 이름 안에서 산다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Retroactive</div>
+        <div class="dossier-code">FILE № 0000-C · CODENAME: <strong>SIGNUM</strong></div>
+        <div class="dossier-name">피보나치 Leonardo of Pisa</div>
+        <div class="dossier-era">c.1170 – 1250 · Pisa</div>
+        <div class="dossier-body">인도-아라비아 숫자를 유럽에 밀수한 상인의 아들. 로마 숫자로 셈하던 대륙의 연산 속도를 한 세기 만에 바꿨다. 회는 이를 최초의 <em>'조용한 개입'</em> 사례로 분류한다 — 칼 없이, 표기법 하나로.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOUNDERS & ARCHIVED ═══ -->
+<section class="section" style="background:var(--coal); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+  <div class="container reveal">
+    <div class="section-label">Fundatores et Archivum</div>
+    <h2 class="section-title">FOUNDERS &amp; ARCHIVED MEMBERS</h2>
+    <div class="section-title-ko">창립자와 봉인 해제 단원</div>
+
+    <div class="dossier-grid">
+      <div class="dossier reveal" style="background:var(--white);">
+        <div class="dossier-stamp" style="border-color:#0a0a0a; color:#0a0a0a;">Founder</div>
+        <div class="dossier-code" style="color:#77776f;">FILE № 1637-01 · CODENAME: <strong style="color:#0a0a0a;">CORVUS PRIMUS</strong></div>
+        <div class="dossier-name" style="color:#0a0a0a;">르네 데카르트 René Descartes</div>
+        <div class="dossier-era" style="color:#77776f;">1596 – 1650 · La Flèche → Stockholm</div>
+        <div class="dossier-body" style="color:#3a3a36;">초대 원점(Origo). 1637년, 인쇄되지 않은 여덟 페이지로 회를 결성했다. 공개 사인(死因)은 폐렴. 흑서고의 기록은 다르지만, 해당 항목은 ACCESS Ⅲ 열람 사항이다. 그의 서명 대신 남은 것은 두 개의 직교하는 선뿐이다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Archived</div>
+        <div class="dossier-code">FILE № 1687-04 · CODENAME: <strong>POMUM</strong></div>
+        <div class="dossier-name">아이작 뉴턴 Isaac Newton</div>
+        <div class="dossier-era">1642 – 1727 · Cambridge · Council Seat Ⅱ</div>
+        <div class="dossier-body">제2대 평의회 의석 Ⅱ. 『프린키피아』의 3할을 스스로 검열한 장본인. 조폐국장 시절 위조범을 추적한 것은 부업이 아니라 회의 <em>소거 임무</em>였다. 사과 일화는 본인이 승인한 위장 서사다 — 대중은 신화를 원하고, 회는 대중이 신화에 만족하기를 원한다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Archived</div>
+        <div class="dossier-code">FILE № 1736-02 · CODENAME: <strong>PONS</strong></div>
+        <div class="dossier-name">레온하르트 오일러 Leonhard Euler</div>
+        <div class="dossier-era">1707 – 1783 · Basel → St. Petersburg</div>
+        <div class="dossier-body">쾨니히스베르크의 일곱 다리 문제를 풀며 그래프 이론을 열었다 — 회에게는 <em>연결망 감시 이론</em>의 탄생이었다. 실명 후에도 구술로 800편을 남겼다. 침묵의 근육과 기록의 규율, 두 소양의 교본으로 승급 교육에 쓰인다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Archived</div>
+        <div class="dossier-code">FILE № 1801-07 · CODENAME: <strong>PRINCEPS</strong></div>
+        <div class="dossier-name">카를 프리드리히 가우스 C. F. Gauss</div>
+        <div class="dossier-era">1777 – 1855 · Göttingen · Council Seat Ⅴ</div>
+        <div class="dossier-body">소행성 세레스의 궤도를 관측 데이터 몇 점으로 재발견해 유럽을 놀라게 했다 — 회의 관측 부서가 그를 주시한 계기다. 완성되지 않은 결과를 발표하지 않는 결벽(pauca sed matura, 적게 그러나 무르익게)은 회칙 제3율의 모범 사례로 인용된다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp" style="border-style:dashed;">Lost</div>
+        <div class="dossier-code">FILE № 1832-00 · CODENAME: <strong>— 미부여 —</strong></div>
+        <div class="dossier-name">에바리스트 갈루아 Évariste Galois</div>
+        <div class="dossier-era">1811 – 1832 · Paris · 영입 실패</div>
+        <div class="dossier-body">명부에서 유일하게 코드네임이 없는 이름. 검은 봉투는 결투 다음 날 아침 그의 하숙집에 도착했다. <em>회가 늦은 유일한 기록.</em> 이후 관측 지침 제1원칙("늦기 전에")이 제정되었고, 매년 5월 30일 흑서고는 그의 미공개 60페이지를 하루 동안 전 단원에게 개방한다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Archived</div>
+        <div class="dossier-code">FILE № 1843-12 · CODENAME: <strong>MACHINA</strong></div>
+        <div class="dossier-name">에이다 러브레이스 Ada Lovelace</div>
+        <div class="dossier-era">1815 – 1852 · London</div>
+        <div class="dossier-body">존재하지 않는 기계를 위한 프로그램을 썼다 — 회는 이를 <em>실물 없이 함수를 신뢰하는 능력</em>의 최초 사례로 분류한다. 그녀의 주석 G는 흑서고 사본이 공개본보다 11페이지 길다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Archived</div>
+        <div class="dossier-code">FILE № 1854-01 · CODENAME: <strong>DUO</strong></div>
+        <div class="dossier-name">조지 불 George Boole</div>
+        <div class="dossier-era">1815 – 1864 · Cork · Council Seat Ⅶ</div>
+        <div class="dossier-body">독학자. 사고(思考)를 0과 1의 대수로 환원했고, 회는 즉시 전 암구호 체계를 그의 언어로 개정했다. 오늘날 최상위 열람 권한이 <em>2진</em>으로만 발급되는 전통이 그에게서 왔다. 까마귀의 언어의 아버지.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Archived</div>
+        <div class="dossier-code">FILE № 1915-03 · CODENAME: <strong>SYMMETRIA</strong></div>
+        <div class="dossier-name">에미 뇌터 Emmy Noether</div>
+        <div class="dossier-era">1882 – 1935 · Göttingen → Bryn Mawr</div>
+        <div class="dossier-body">대칭이 있는 곳에 보존량이 있다 — 뇌터 정리는 회의 감시 이론 전체를 다시 쓰게 했다. <em>변하지 않는 것을 찾으면 숨은 대칭이 보인다</em>는 그녀의 원리는 현재도 자금 흐름 관측 부서의 제1도구다. 무급 강사 시절에도 강의를 멈추지 않은 이력은 소양 제8항(숫자에 대한 예의)의 예화로 쓰인다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Archived</div>
+        <div class="dossier-code">FILE № 1913-09 · CODENAME: <strong>SOMNIUM</strong></div>
+        <div class="dossier-name">스리니바사 라마누잔 S. Ramanujan</div>
+        <div class="dossier-era">1887 – 1920 · Madras → Cambridge</div>
+        <div class="dossier-body">증명 없이 참을 꺼내는 능력 — 회의 분류 체계로는 설명 불가능한 유일한 파일. 그의 노트 중 '잃어버린 노트'가 1976년에야 발견된 것은 우연이 아니다. <em>회가 반납한 것이다.</em> 세상이 받아들일 준비가 되는 속도에 맞춰서.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Archived</div>
+        <div class="dossier-code">FILE № 1936-06 · CODENAME: <strong>ORACULUM</strong></div>
+        <div class="dossier-name">앨런 튜링 Alan Turing</div>
+        <div class="dossier-era">1912 – 1954 · Bletchley Park · 개입 제1호</div>
+        <div class="dossier-body">회칙 제2율("관측하되 개입하지 말라")이 389년 역사상 유일하게 정지된 작전의 중심. 블레츨리 파크 투입 인원 중 회의 단원 수는 아직도 ACCESS Ⅲ 사항이다. 회가 그를 지키지 못한 1954년은, 갈루아 이후 두 번째의 <em>공식 애도일</em>로 지정되어 있다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp">Archived</div>
+        <div class="dossier-code">FILE № 1945-11 · CODENAME: <strong>IANUS</strong></div>
+        <div class="dossier-name">존 폰 노이만 John von Neumann</div>
+        <div class="dossier-era">1903 – 1957 · Budapest → Princeton</div>
+        <div class="dossier-body">게임이론, 컴퓨터 구조, 그리고 차마 명부에 적지 못하는 것들. 두 얼굴의 야누스라는 코드네임은 그가 회에서 맡은 역할 때문이다 — <em>표면의 자문가이자, 심층의 계산가.</em> 그의 병상 곁을 군이 지킨 이유를 공개 사학은 아직 절반만 안다.</div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-stamp" style="transform:rotate(-4deg);">Active</div>
+        <div class="dossier-code">FILE № 20██-██ · CODENAME: <strong><span class="redacted">████████</span></strong></div>
+        <div class="dossier-name"><span class="redacted" style="background:#f2f2ef; color:#f2f2ef;">██████ ██████</span></div>
+        <div class="dossier-era">19██ – · <span class="redacted" style="background:#f2f2ef; color:#f2f2ef;">██████</span></div>
+        <div class="dossier-body">생존 단원의 기록은 회칙 제3율에 따라 표시할 수 없다. 이 카드가 비어 있는 것이 아니다 — <em>당신의 열람 등급이 낮은 것이다.</em> ACCESS Ⅱ 이상은 터미널에서 열람하라.</div>
+      </div>
+    </div>
+
+    <div class="center" style="margin-top:54px;">
+      <a class="btn" href="admin.html">생존 단원 명부 — Access Terminal</a>
+    </div>
+  </div>
+</section>
+
+<div class="ornament reveal">✕ ✕ ✕</div>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-title">ORDO ALGEBRAE</div>
+      <p class="footer-brand-body">대수회 大數會. 1637년 이후, 세계라는 그래프의 이면에서. 이 사이트는 공식적으로 존재하지 않는다.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">표면</div>
+      <ul class="footer-links">
+        <li><a href="index.html">입구</a></li>
+        <li><a href="order.html">강령과 조직</a></li>
+        <li><a href="members.html">명부</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">조직</div>
+      <ul class="footer-links">
+        <li><a href="order.html#degrees">등급 체계</a></li>
+        <li><a href="order.html#requirements">기본 소양</a></li>
+        <li><a href="order.html#rules">침묵의 규율</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">심층</div>
+      <ul class="footer-links">
+        <li><a href="admin.html">⌘ Access Terminal</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="creed">"Non religio, sed calculus." — 종교가 아니라, 계산이다.</span><br>
+    Corvus Corone · MDCXXXVII – MMXXVI · This page does not exist
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>
