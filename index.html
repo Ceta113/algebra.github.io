@@ -56,9 +56,17 @@
 </div>
 
 <!-- ═══ FX ═══ -->
+<canvas id="fxCanvas"></canvas>
 <div class="fx-scanlines"></div>
 <div class="fx-vignette"></div>
 <div class="fx-flicker"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor-axis-x" id="axX"></div>
+<div class="cursor-axis-y" id="axY"></div>
+<div class="coord-label" id="coordLabel"></div>
+<div id="crowLayer"></div>
+<div class="route-wipe" id="routeWipe"><div class="wipe-bin" id="wipeBin"></div></div>
+<div class="obs-toast" id="obsToast"></div>
 
 <!-- ═══ NAV ═══ -->
 <nav class="site-nav">
@@ -129,7 +137,7 @@
       </svg>
     </div>
     <div class="hero-eyebrow">Est. MDCXXXVII · Non Religio, Sed Calculus</div>
-    <h1 class="hero-title" data-scramble>ORDO ALGEBRAE</h1>
+    <h1 class="hero-title glitchable" data-scramble>ORDO ALGEBRAE</h1>
     <div class="hero-ko">대수회 大數會</div>
     <p class="hero-creed">
       우리는 종교가 아니다. <strong>우리는 계산이다.</strong><br>
@@ -306,10 +314,10 @@
   <section class="section" style="padding-bottom:40px;">
     <div class="container center reveal">
       <div class="stats-strip">
-        <div class="stat-cell"><div class="stat-value">389</div><div class="stat-label">침묵의 연수 (1637–2026)</div></div>
+        <div class="stat-cell"><div class="stat-value" data-count="389">389</div><div class="stat-label">침묵의 연수 (1637–2026)</div></div>
         <div class="stat-cell"><div class="stat-value">Ⅵ</div><div class="stat-label">등급의 수</div></div>
-        <div class="stat-cell"><div class="stat-value">9</div><div class="stat-label">평의회 의석</div></div>
-        <div class="stat-cell"><div class="stat-value">1</div><div class="stat-label">원점 — 신원 비공개</div></div>
+        <div class="stat-cell"><div class="stat-value" data-count="9">9</div><div class="stat-label">평의회 의석</div></div>
+        <div class="stat-cell"><div class="stat-value" data-count="1">1</div><div class="stat-label">원점 — 신원 비공개</div></div>
         <div class="stat-cell"><div class="stat-value">0</div><div class="stat-label">공식적으로, 우리는 없다</div></div>
       </div>
     </div>
@@ -725,24 +733,24 @@
     <div class="container narrow">
       <div class="intercept reveal">
         <div class="intercept-head"><span>INTERCEPT T-087 · 2026.06.28 02:14 UTC</span><span class="sig">SRC: 지부 정기 보고 · PLAINTEXT</span></div>
-        <div class="intercept-body">북유럽 지부(LEMMA) 정기 보고 — 관측 대상 계수 3명 소양 검증 진행 중. 특이사항 없음. 들판 조용함.</div>
+        <div class="intercept-body typewrite">북유럽 지부(LEMMA) 정기 보고 — 관측 대상 계수 3명 소양 검증 진행 중. 특이사항 없음. 들판 조용함.</div>
       </div>
 
       <div class="intercept reveal">
         <div class="intercept-head"><span>INTERCEPT T-093 · 2026.07.01 00:00 UTC</span><span class="sig">SRC: 불명 · HEX ENCODED</span></div>
-        <div class="intercept-body">76 65 72 69 74 61 73</div>
+        <div class="intercept-body typewrite">76 65 72 69 74 61 73</div>
         <div class="intercept-note">월간 인증 신호로 추정. <em>서기의 언어(16진)</em>다 — 각 쌍이 하나의 문자다. 복호화하여 콘솔에 보고하라. 이것을 읽을 수 있는 자는 터미널의 두 번째 문도 열 수 있다.</div>
       </div>
 
       <div class="intercept reveal">
         <div class="intercept-head"><span>INTERCEPT T-101 · 2026.05.25 23:47 UTC</span><span class="sig">SRC: SIEVE (최후 신호) · BINARY</span></div>
-        <div class="intercept-body">01100001 01100111 01100101 01110010</div>
+        <div class="intercept-body typewrite">01100001 01100111 01100101 01110010</div>
         <div class="intercept-note">동남아 지부 수호자 SIEVE의 마지막 송신. 이후 교신 두절. <em>까마귀의 언어(2진)</em> — 여덟 비트가 한 글자다. 네 글자의 라틴어 단어. 이 단어가 무엇인지 알아내면, 원점의 지령(T-104)이 왜 그 문장인지 이해하게 된다.</div>
       </div>
 
       <div class="intercept reveal">
         <div class="intercept-head"><span>INTERCEPT T-104 · 2026.07.04 00:00 UTC</span><span class="sig">SRC: ORIGO · PLAINTEXT (이례적)</span></div>
-        <div class="intercept-body">"SIEVE의 침묵은 사고가 아니다. 들판을 확인하라. — O"</div>
+        <div class="intercept-body typewrite">"SIEVE의 침묵은 사고가 아니다. 들판을 확인하라. — O"</div>
         <div class="intercept-note">원점이 평문을 쓴 것은 389년 만에 처음이다. <em>급하다는 뜻이다.</em> T-101과 대조하라.</div>
       </div>
 
@@ -805,9 +813,9 @@
       <section class="tier-section" id="tier1" data-clearance="1">
         <h2 style="font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.4em; color:var(--dim); text-transform:uppercase; margin:38px 0 0;">Access Ⅰ — Status Ordinis · 조직 현황</h2>
         <div class="admin-grid">
-          <div class="admin-panel"><h3>활동 단원 (전 지부)</h3><div class="big">1,637</div><div class="small-note">결성 연도와 같은 수를 유지한다. 한 명이 떠나야 한 명이 들어온다.</div></div>
-          <div class="admin-panel"><h3>관측 중인 계수 (제Ⅰ급)</h3><div class="big">12,882</div><div class="small-note">이번 분기 신규 관측 지정 +204. 그중 검은 봉투 발송 예정 3.</div></div>
-          <div class="admin-panel"><h3>진행 중 소거 작전</h3><div class="big">7</div><div class="small-note">조작 통계 4 · 위조 증명 2 · 상세는 Access Ⅱ.</div></div>
+          <div class="admin-panel"><h3>활동 단원 (전 지부)</h3><div class="big" data-count="1637" data-format="comma">1,637</div><div class="small-note">결성 연도와 같은 수를 유지한다. 한 명이 떠나야 한 명이 들어온다.</div></div>
+          <div class="admin-panel"><h3>관측 중인 계수 (제Ⅰ급)</h3><div class="big" data-count="12882" data-format="comma">12,882</div><div class="small-note">이번 분기 신규 관측 지정 +204. 그중 검은 봉투 발송 예정 3.</div></div>
+          <div class="admin-panel"><h3>진행 중 소거 작전</h3><div class="big" data-count="7">7</div><div class="small-note">조작 통계 4 · 위조 증명 2 · 상세는 Access Ⅱ.</div></div>
           <div class="admin-panel"><h3>흑서고 상태</h3><div style="margin-top:6px; line-height:2.4;"><span class="pill ok">제1열 — 정상</span><br><span class="pill ok">제2열 — 정상</span><br><span class="pill inv">제3열 — 밀봉</span></div></div>
         </div>
         <div class="admin-panel" style="border:1px solid var(--line); margin-bottom:36px;">
@@ -945,7 +953,7 @@
 <div class="audio-dock" id="audioDock">
   <button class="dock-btn" id="dockBtn">▶</button>
   <div class="dock-info">
-    <div class="dock-title" id="dockTitle"><span class="dock-eq"><span></span><span></span><span></span></span>—</div>
+    <div class="dock-title" id="dockTitle"><span class="dock-eq"><span></span><span></span><span></span></span><span id="dockTitleText">—</span></div>
     <div class="dock-bar" id="dockBar"><div class="dock-bar-inner"><div class="dock-bar-fill" id="dockFill"></div></div></div>
   </div>
   <div class="dock-time" id="dockTime">0:00 / 0:00</div>

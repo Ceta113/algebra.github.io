@@ -637,3 +637,161 @@ main.leaving { animation: routeOut .22s ease both; }
 
 /* utility clock */
 .utc-clock { font-family: 'Courier New', monospace; font-size: 0.7rem; letter-spacing: 0.12em; color: var(--dim); }
+
+/* ═══════════════════════════════════════════════
+   FX LAYER 2 — Animatic upgrade
+   ═══════════════════════════════════════════════ */
+
+/* observation network canvas */
+#fxCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+/* scroll progress */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0;
+  background: var(--white); z-index: 950;
+  box-shadow: 0 0 12px rgba(255,255,255,0.5);
+  transition: width .1s linear;
+}
+
+/* coordinate cursor */
+.cursor-axis-x, .cursor-axis-y { position: fixed; pointer-events: none; z-index: 940; opacity: 0; transition: opacity .4s; }
+.cursor-axis-x { left: 0; right: 0; height: 1px; background: var(--white); }
+.cursor-axis-y { top: 0; bottom: 0; width: 1px; background: var(--white); }
+body.cursor-on .cursor-axis-x, body.cursor-on .cursor-axis-y { opacity: 0.07; }
+.coord-label {
+  position: fixed; pointer-events: none; z-index: 941;
+  font-family: 'Courier New', monospace; font-size: 0.58rem;
+  letter-spacing: 0.08em; color: var(--dim);
+  opacity: 0; transition: opacity .4s;
+  white-space: nowrap;
+}
+body.cursor-on .coord-label { opacity: 0.75; }
+@media (pointer: coarse) { .cursor-axis-x, .cursor-axis-y, .coord-label { display: none; } }
+
+/* crow flybys */
+#crowLayer { position: fixed; inset: 0; pointer-events: none; z-index: 890; overflow: hidden; }
+.crow-flyer { position: absolute; will-change: transform; animation: flyX var(--dur, 12s) linear forwards; }
+.crow-flyer.rtl { animation-name: flyXr; }
+.crow-flyer .bob { animation: flyBob 2.6s ease-in-out infinite; }
+.crow-flyer svg { display: block; overflow: visible; }
+.crow-flyer .wingL, .crow-flyer .wingR { transform-box: fill-box; transform-origin: 100% 80%; animation: flapL var(--flap, .5s) ease-in-out infinite alternate; }
+.crow-flyer .wingR { transform-origin: 0% 80%; animation-name: flapR; }
+@keyframes flyX  { from { transform: translateX(-12vw); } to { transform: translateX(112vw); } }
+@keyframes flyXr { from { transform: translateX(112vw) scaleX(-1); } to { transform: translateX(-12vw) scaleX(-1); } }
+@keyframes flyBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(14px); } }
+@keyframes flapL { from { transform: rotate(26deg); } to { transform: rotate(-34deg); } }
+@keyframes flapR { from { transform: rotate(-26deg); } to { transform: rotate(34deg); } }
+
+/* route wipe transition */
+.route-wipe {
+  position: fixed; inset: 0; z-index: 1400;
+  background: var(--black);
+  transform: scaleY(0);
+  transform-origin: top;
+  pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.route-wipe.run { animation: wipeSeq .62s cubic-bezier(.6,0,.3,1) both; pointer-events: auto; }
+@keyframes wipeSeq {
+  0% { transform: scaleY(0); transform-origin: top; }
+  38% { transform: scaleY(1); transform-origin: top; }
+  62% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.wipe-bin {
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem; letter-spacing: 0.3em;
+  color: var(--white); opacity: 0;
+  white-space: nowrap;
+}
+.route-wipe.run .wipe-bin { animation: wipeBin .62s steps(6) both; }
+@keyframes wipeBin { 20% { opacity: 0; } 35% { opacity: .9; } 65% { opacity: .9; } 80% { opacity: 0; } }
+.route-wipe::before, .route-wipe::after {
+  content: '';
+  position: absolute; left: 0; right: 0; height: 1px;
+  background: var(--white); opacity: .5;
+}
+.route-wipe::before { top: 0; }
+.route-wipe::after { bottom: 0; }
+
+/* hero glitch */
+.glitchable { position: relative; animation: microGlitch 7s steps(1) infinite; }
+@keyframes microGlitch {
+  0%, 93.2%, 93.9%, 100% { transform: none; text-shadow: 0 0 40px rgba(255,255,255,0.15); clip-path: none; }
+  93.4% { transform: translate(3px, -2px) skewX(3deg); clip-path: inset(12% 0 55% 0); }
+  93.6% { transform: translate(-4px, 2px) skewX(-4deg); clip-path: inset(60% 0 8% 0); }
+  93.8% { transform: translate(2px, 0); clip-path: inset(30% 0 30% 0); }
+}
+
+/* redacted taunt */
+.redacted:hover { animation: redactJitter .32s steps(3) infinite; }
+@keyframes redactJitter {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(1px, -1px); }
+  66% { transform: translate(-1px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+.clearance-reveal.revealed .redacted:hover { animation: none; }
+
+/* doc stamp slam */
+.doc-stamp-big { animation: stampSlam .55s cubic-bezier(.2,1.6,.4,1) .3s both; }
+@keyframes stampSlam {
+  0% { transform: rotate(8deg) scale(3.4); opacity: 0; }
+  60% { transform: rotate(8deg) scale(0.92); opacity: 1; }
+  100% { transform: rotate(8deg) scale(1); opacity: 1; }
+}
+.doc-paper.slammed { animation: docIn .5s ease both, paperShake .3s ease .62s; }
+@keyframes paperShake {
+  0%, 100% { transform: translate(0,0) rotate(0); }
+  30% { transform: translate(1px, 2px) rotate(.25deg); }
+  60% { transform: translate(-1px, 1px) rotate(-.2deg); }
+}
+
+/* observation toast */
+.obs-toast {
+  position: fixed; left: 20px; bottom: 20px; z-index: 960;
+  max-width: 320px;
+  background: rgba(6,6,6,0.96);
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--white);
+  padding: 16px 20px;
+  font-size: 0.78rem; line-height: 1.9; color: var(--grey);
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .5s, transform .5s;
+  pointer-events: none;
+}
+.obs-toast .toast-tag {
+  display: block;
+  font-family: 'Courier New', monospace; font-size: 0.58rem;
+  letter-spacing: 0.2em; color: var(--dim); margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.obs-toast.show { opacity: 1; transform: translateY(0); }
+
+/* boot binary drizzle */
+.boot-drizzle { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: .18; }
+.boot-col {
+  position: absolute; top: -40%;
+  font-family: 'Courier New', monospace; font-size: 0.62rem;
+  color: var(--white); line-height: 1.7; letter-spacing: 0.05em;
+  writing-mode: vertical-rl; text-orientation: upright;
+  animation: drizzle var(--dz, 6s) linear infinite;
+}
+@keyframes drizzle { to { transform: translateY(140vh); } }
+
+/* count-up flicker */
+.stat-value.counting { animation: countFlick .12s steps(2) infinite; }
+@keyframes countFlick { 50% { opacity: .82; } }
+
+/* magnetic buttons handled inline via JS transform */
+.btn { will-change: transform; }
+
+/* hero emblem tilt */
+.hero-emblem { transition: transform .18s ease-out; will-change: transform; }
+
+/* reduced motion — mercy rule */
+@media (prefers-reduced-motion: reduce) {
+  .glitchable, .fx-flicker, .crow-flyer, .boot-col, .route-wipe.run, .stat-value.counting { animation: none !important; }
+  #fxCanvas, #crowLayer, .cursor-axis-x, .cursor-axis-y, .coord-label { display: none; }
+}
