@@ -59,7 +59,7 @@ function applyClearance() {
 }
 
 /* ───────────────────────── Router ───────────────────────── */
-const ROUTES = ['home', 'codex', 'registry', 'archive', 'signals', 'terminal'];
+const ROUTES = ['home', 'codex', 'registry', 'geometria', 'archive', 'signals', 'terminal'];
 let revealObserver = null;
 
 function initReveal(scope) {
