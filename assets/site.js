@@ -412,6 +412,8 @@ function isGaloisDay() {
   return d.getMonth() === 4 && d.getDate() === 30;
 }
 
+let openDocFn = null; // lifted for diagnostic console
+
 function initArchive() {
   const viewer = document.getElementById('docViewer');
   if (!viewer) return;
@@ -443,6 +445,7 @@ function initArchive() {
   }
   viewer.addEventListener('click', e => { if (e.target === viewer) close(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  openDocFn = openDoc;
 }
 
 /* ───────────────────────── Terminal ───────────────────────── */
@@ -755,6 +758,129 @@ function initTilt() {
   });
 }
 
+/* ═══════════════════ DIAGNOSTIC CONSOLE (debug) ═══════════════════ */
+// In-world: 관측 부서 진단 콘솔이 표면 빌드에 유출됨. Real: dev/debug tool.
+const BUILD = 'v389.7 · surface';
+function initDiag() {
+  const panel = document.getElementById('diag');
+  if (!panel) return;
+  const logEl = document.getElementById('diagLog');
+  const inEl = document.getElementById('diagIn');
+  const stateEl = document.getElementById('diagState');
+
+  const enc = (w, base) => Array.from(String(w)).map(c => c.charCodeAt(0).toString(base).padStart(base === 2 ? 8 : 2, '0')).join(' ');
+  const log = (t, cls) => {
+    const d = document.createElement('div');
+    if (cls) d.className = cls;
+    d.textContent = t;
+    logEl.appendChild(d); logEl.scrollTop = logEl.scrollHeight;
+  };
+  const audioLine = () => {
+    if (!currentId) return 'idle';
+    const a = audioMap[currentId];
+    return currentId + (a.paused ? ' ⏸ ' : ' ▶ ') + fmt(a.currentTime) + '/' + fmt(a.duration);
+  };
+  function renderState() {
+    const t = currentTier();
+    stateEl.innerHTML =
+      '<div><span class="k">BUILD</span><span class="v">' + BUILD + '</span></div>' +
+      '<div><span class="k">ROUTE</span><span class="v">#/' + routeFromHash() + '</span></div>' +
+      '<div><span class="k">CLEARANCE</span><span class="v ' + (t ? '' : 'warn') + '">' + TIER_NAMES[t] + ' (' + t + ')</span></div>' +
+      '<div><span class="k">AUDIO</span><span class="v">' + audioLine() + '</span></div>' +
+      '<div><span class="k">DECODE</span><span class="v">veritas:' + (PUZZLES.veritas.done ? '✓' : '·') + '  ager:' + (PUZZLES.ager.done ? '✓' : '·') + '</span></div>' +
+      '<div><span class="k">CROWS</span><span class="v">' + document.querySelectorAll('.crow-flyer').length + ' aloft</span></div>' +
+      '<div><span class="k">MOTION</span><span class="v">' + (REDUCED ? 'reduced' : 'full') + '</span></div>';
+  }
+
+  const open = () => { panel.classList.add('open'); renderState(); setTimeout(() => inEl.focus(), 200); };
+  const close = () => panel.classList.remove('open');
+  const toggle = () => panel.classList.contains('open') ? close() : open();
+  window.__diagToggle = toggle;
+
+  const COMMANDS = {
+    help() {
+      log('COMMANDS —', 'ok');
+      log('  tier <0-3>       열람 등급 설정 (평문/16진/2진 없이 즉시)');
+      log('  go <route>       라우트 이동 (home codex registry geometria archive signals terminal)');
+      log('  doc <id>         흑서고 문서 열기 (descartes boole schism lindemann sieve omega galois …)');
+      log('  reveal           모든 검열(redacted) 해제');
+      log('  crow [n]         까마귀 소환');
+      log('  hex <말> / bin <말>   서기·까마귀 언어 변환기');
+      log('  decode           감청 퍼즐(veritas·ager) 즉시 해결');
+      log('  audio play|pause|clavis|glass');
+      log('  whoami           관측 상태 조회');
+      log('  reset            세션 초기화(부팅·등급·퍼즐) 후 새로고침');
+      log('  clear            로그 지우기');
+    },
+    tier(a) {
+      const n = parseInt(a, 10);
+      if (![0,1,2,3].includes(n)) return log('✕ tier 0..3', 'bad');
+      if (n === 0) revokeTier(); else grantTier(n);
+      log('→ CLEARANCE = ' + TIER_NAMES[n], 'ok'); renderState();
+    },
+    go(a) {
+      if (!ROUTES.includes(a)) return log('✕ unknown route: ' + a, 'bad');
+      location.hash = '#/' + a; log('→ #/' + a, 'ok'); setTimeout(renderState, 300);
+    },
+    doc(a) {
+      if (!a) return log('✕ doc <id>', 'bad');
+      if (routeFromHash() !== 'archive') location.hash = '#/archive';
+      log('→ opening doc: ' + a, 'ok');
+      close(); // panel would cover the viewer otherwise
+      setTimeout(() => { if (!openDocFn) return; openDocFn(a); }, 160);
+    },
+    reveal() {
+      document.querySelectorAll('.clearance-reveal').forEach(el => el.classList.add('revealed'));
+      log('→ all redactions lifted (visual only)', 'ok');
+    },
+    crow(a) { const n = Math.max(1, Math.min(20, parseInt(a, 10) || 1)); spawnCrowFlock(n); log('→ ' + n + ' crow(s)', 'ok'); },
+    hex(a) { if (!a) return log('✕ hex <word>', 'bad'); log(a + ' → ' + enc(a, 16), 'ok'); },
+    bin(a) { if (!a) return log('✕ bin <word>', 'bad'); log(a + ' → ' + enc(a, 2), 'ok'); },
+    decode() { PUZZLES.veritas.done = true; PUZZLES.ager.done = true; log('→ intercepts T-093·T-101 marked decoded', 'ok'); renderState(); },
+    audio(a) {
+      if (a === 'play' || a === 'pause') { if (currentId) { const x = audioMap[currentId]; a === 'play' ? x.play() : x.pause(); } }
+      else if (a === 'clavis' || a === 'glass') { toggle_(a); }
+      log('→ audio ' + (a || ''), 'ok'); renderState();
+      function toggle_(id){ if (currentId && currentId!==id) audioMap[currentId].pause(); currentId=id; audioMap[id].play(); }
+    },
+    whoami() {
+      log('당신은 좌석 없는 관측 대상이다. STATUS: 무명수(Ⅰ 후보 풀).', 'ok');
+      log('이 콘솔은 관측 부서 내부 도구다 — 당신이 이것을 보고 있다는 사실이 이미 기록되었다.');
+    },
+    reset() {
+      try { sessionStorage.clear(); } catch (e) {}
+      log('→ session cleared. reloading…', 'ok'); setTimeout(() => location.reload(), 600);
+    },
+    clear() { logEl.innerHTML = ''; }
+  };
+
+  function run(raw) {
+    const line = raw.trim(); if (!line) return;
+    log('> ' + line, 'cmd');
+    const [cmd, ...rest] = line.split(/\s+/);
+    const fn = COMMANDS[cmd.toLowerCase()];
+    if (fn) { try { fn(rest.join(' ')); } catch (e) { log('✕ ' + e.message, 'bad'); } }
+    else log('✕ unknown: ' + cmd + '  (help)', 'bad');
+  }
+
+  document.getElementById('diagRun').addEventListener('click', () => { run(inEl.value); inEl.value = ''; });
+  inEl.addEventListener('keydown', e => { if (e.key === 'Enter') { run(inEl.value); inEl.value = ''; } if (e.key === 'Escape') close(); });
+  panel.querySelector('.x').addEventListener('click', close);
+  document.getElementById('diagHint')?.addEventListener('click', open);
+  panel.querySelectorAll('.diag-btn').forEach(b => b.addEventListener('click', () => { run(b.dataset.cmd); }));
+
+  // toggle via backtick (when not typing) or Ctrl/Cmd+`
+  document.addEventListener('keydown', e => {
+    const typing = e.target && /INPUT|TEXTAREA/.test(e.target.tagName);
+    if (e.key === '`' && (!typing || e.target === inEl ? e.target !== inEl : false)) { /* noop guard */ }
+    if (e.key === '`' && !typing) { e.preventDefault(); toggle(); }
+  });
+
+  log('DIAGNOSTIC CONSOLE — 관측 부서 진단 콘솔.', 'ok');
+  log('내부 빌드가 표면에 유출되었습니다. `help` 입력.');
+  renderState();
+}
+
 /* ───────────────────────── Misc ───────────────────────── */
 function toggleNav() { document.querySelector('.nav-links')?.classList.toggle('open'); }
 window.toggleNav = toggleNav;
@@ -774,6 +900,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollProgress();
   initMagnetic();
   initTilt();
+  initDiag();
   scheduleCrows();
   navigate();
 });

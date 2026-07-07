@@ -903,3 +903,67 @@ body.cursor-on .coord-label { opacity: 0.75; }
 .threat-bar { height: 6px; background: rgba(255,255,255,0.12); margin-bottom: 10px; position: relative; }
 .threat-bar span { position: absolute; left: 0; top: 0; bottom: 0; background: var(--white); }
 .threat-cell p { font-size: 0.8rem; line-height: 1.8; color: var(--dim); }
+
+/* ═══════════════════════════════════════════════
+   DIAGNOSTIC CONSOLE — 진단 콘솔 (debug, in-world leak)
+   Toggle: backtick ` · monochrome terminal
+   ═══════════════════════════════════════════════ */
+.diag {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 1800;
+  width: min(380px, 92vw);
+  background: rgba(3,3,3,0.97);
+  border-left: 1px solid var(--line-strong);
+  box-shadow: -20px 0 60px rgba(0,0,0,0.7);
+  transform: translateX(102%);
+  transition: transform .38s cubic-bezier(.2,.9,.3,1);
+  display: flex; flex-direction: column;
+  font-family: 'Courier New', monospace;
+  backdrop-filter: blur(6px);
+}
+.diag.open { transform: translateX(0); }
+.diag-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border-bottom: 1px solid var(--line);
+  background: var(--white); color: var(--black);
+}
+.diag-head .t { font-family: 'Cinzel', serif; font-size: 0.66rem; letter-spacing: 0.24em; text-transform: uppercase; }
+.diag-head .x { cursor: pointer; border: 1px solid var(--black); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; background: none; }
+.diag-head .x:hover { background: var(--black); color: var(--white); }
+.diag-sub { padding: 8px 16px; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--dim); border-bottom: 1px solid var(--line); line-height: 1.7; }
+.diag-sub b { color: #c98484; }
+.diag-state { padding: 12px 16px; font-size: 0.72rem; line-height: 1.85; color: var(--grey); border-bottom: 1px solid var(--line); }
+.diag-state .k { color: var(--dim); display: inline-block; width: 92px; }
+.diag-state .v { color: var(--white); }
+.diag-state .v.warn { color: #d8b46a; }
+.diag-quick { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.diag-btn {
+  font-family: 'Courier New', monospace; font-size: 0.66rem;
+  background: transparent; color: var(--grey);
+  border: 1px solid var(--line-strong); padding: 5px 9px; cursor: pointer;
+  transition: all .15s; letter-spacing: 0.04em;
+}
+.diag-btn:hover { background: var(--white); color: var(--black); border-color: var(--white); }
+.diag-log { flex: 1; overflow-y: auto; padding: 12px 16px; font-size: 0.72rem; line-height: 1.85; color: var(--dim); white-space: pre-wrap; word-break: break-word; }
+.diag-log .ok { color: var(--white); }
+.diag-log .bad { color: #d8746e; }
+.diag-log .cmd { color: #8fb8d8; }
+.diag-inrow { display: flex; border-top: 1px solid var(--line); }
+.diag-in {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: var(--white); font-family: 'Courier New', monospace; font-size: 0.78rem;
+  padding: 13px 16px; letter-spacing: 0.04em;
+}
+.diag-in::placeholder { color: var(--dim); }
+.diag-run { background: var(--white); color: var(--black); border: none; padding: 0 18px; cursor: pointer; font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.2em; }
+.diag-run:hover { background: var(--grey); }
+/* tiny floating hint chip */
+.diag-hint {
+  position: fixed; bottom: 14px; right: 14px; z-index: 780;
+  font-family: 'Courier New', monospace; font-size: 0.58rem; letter-spacing: 0.06em;
+  color: var(--dim); border: 1px dashed var(--line); padding: 5px 9px;
+  background: rgba(3,3,3,0.7); cursor: pointer; opacity: 0.5; transition: opacity .2s;
+  user-select: none;
+}
+.diag-hint:hover { opacity: 1; color: var(--white); border-color: var(--line-strong); }
+.diag.open ~ .diag-hint { opacity: 0; pointer-events: none; }
+@media (max-width: 560px) { .diag-hint { bottom: 74px; } }

@@ -107,6 +107,7 @@
     <b>[REMINDER]</b> 이 페이지는 공식적으로 존재하지 않는다 &nbsp;···&nbsp;
     <b>[RIVAL]</b> 기하회(幾何會) 작도 활동 재점화 정황 — 대립 분석 #/geometria 참조 &nbsp;···&nbsp;
     <b>[RIVAL]</b> 샤르트르·볼로냐에서 '미완 작도' 3건 추가 관측 — 형(形) 개입 의심 &nbsp;···&nbsp;
+    <b>[SYS]</b> 진단 콘솔이 표면 빌드에 노출됨 — 백틱( ` ) 키 · 관측 부서 확인 요망 · 흑서고 #DBG-이상 참조 &nbsp;···&nbsp;
   </div>
 </div>
 
@@ -697,6 +698,11 @@
           <span><span class="file-name">SIEVE 실종 사건 파일</span><br><span class="file-meta">진행 중 조사 · 2026 · 제2열 · 조사 책임: KARMAN</span></span>
           <span class="file-badge">SEALED</span>
         </div>
+        <div class="file-row reveal" data-doc="dbg" data-need="0">
+          <span class="file-id">#DBG-이상</span>
+          <span><span class="file-name">진단 콘솔 유출 사고 — 예비 보고</span><br><span class="file-meta">내부 사고 · 2026 · 제1열 · 백틱( ` ) 키로 재현 가능</span></span>
+          <span class="file-badge open-badge">OPEN</span>
+        </div>
         <div class="file-row reveal" data-doc="schism" data-need="0">
           <span class="file-id">#G-1637</span>
           <span><span class="file-name">기하회 분립 기록 — 「대패의 겨울」</span><br><span class="file-meta">대립 학파 문서 · 1637 · 제1열 · 대립 분석 #/geometria 연동</span></span>
@@ -1213,6 +1219,34 @@
   <div class="dock-time" id="dockTime">0:00 / 0:00</div>
 </div>
 
+<!-- ═══ DIAGNOSTIC CONSOLE (debug · in-world leak) ═══ -->
+<div class="diag-hint" id="diagHint" title="진단 콘솔 열기 (백틱 ` 키)">⌥ DIAG ·  `</div>
+<div class="diag" id="diag" aria-hidden="true">
+  <div class="diag-head">
+    <span class="t">Diagnostic Console</span>
+    <button class="x" aria-label="close">✕</button>
+  </div>
+  <div class="diag-sub">관측 부서 내부 진단 도구 · <b>INTERNAL BUILD LEAK</b> — 표면 빌드에 노출됨. 토글: 백틱( ` )</div>
+  <div class="diag-state" id="diagState"></div>
+  <div class="diag-quick">
+    <button class="diag-btn" data-cmd="help">help</button>
+    <button class="diag-btn" data-cmd="tier 1">tier 1</button>
+    <button class="diag-btn" data-cmd="tier 2">tier 2</button>
+    <button class="diag-btn" data-cmd="tier 3">tier 3</button>
+    <button class="diag-btn" data-cmd="tier 0">seal</button>
+    <button class="diag-btn" data-cmd="reveal">reveal</button>
+    <button class="diag-btn" data-cmd="crow 6">crow×6</button>
+    <button class="diag-btn" data-cmd="decode">decode</button>
+    <button class="diag-btn" data-cmd="go geometria">→기하회</button>
+    <button class="diag-btn" data-cmd="reset">reset</button>
+  </div>
+  <div class="diag-log" id="diagLog"></div>
+  <div class="diag-inrow">
+    <input class="diag-in" id="diagIn" placeholder="command…  (help)" spellcheck="false" autocomplete="off">
+    <button class="diag-run" id="diagRun">RUN</button>
+  </div>
+</div>
+
 <!-- ═══ DOC VIEWER ═══ -->
 <div class="doc-viewer" id="docViewer">
   <div class="doc-paper"></div>
@@ -1310,6 +1344,20 @@
     <p>389년간 우리는 유일한 관측자였다. 이제 관측자가 관측되고 있다. 회칙 제2율 제2발동의 남은 조건 3개 중 첫 번째가 방금 충족되었다 — <em>'다른 손의 존재가 증명될 것.'</em></p>
     <p>다음 지령은 12월 31일 자정, 예측 좌표와 함께. 그때까지 이 문서를 읽은 자는 아무것도 하지 말라. <em>관측하라. 그것이 우리다.</em></p>
     <p style="text-align:right; font-family:'Courier New',monospace; color:#77776f;">— O</p>
+  </div>
+</template>
+
+<template id="doc-dbg">
+  <div class="doc-classification">제1열 · 공개 열람 · 내부 사고</div>
+  <div class="doc-stamp-big">Leak</div>
+  <div class="doc-title">#DBG-이상 — 진단 콘솔 유출 사고</div>
+  <div class="doc-sub">2026 · 예비 보고 · 작전 유리창 부서(KARMAN) 제출</div>
+  <div class="doc-body">
+    <p>표면 사이트(작전 유리창) 빌드에 관측 부서 내부 도구 <em>진단 콘솔(Diagnostic Console)</em>이 노출되었다. 방문자는 백틱( <span class="mono">`</span> ) 키로 이를 열 수 있다.</p>
+    <p>콘솔은 열람 등급 임의 설정, 검열 해제, 문서 강제 열람, 언어 변환기(16진·2진), 세션 초기화 등을 허용한다 — <em>본래 우리 관측관이 후보의 반응을 시험할 때 쓰는 장치다.</em></p>
+    <p>KARMAN의 판단: <b>회수하지 않는다.</b> "문을 열어둔 김에, 문고리도 보여주자. 진짜 소양을 갖춘 자는 도구를 보면 <em>어떻게 만들어졌는지</em>를 묻지, 무엇을 훔칠지 묻지 않는다. 이 콘솔을 여는 자의 <em>첫 명령어</em>가 그의 등급을 말해줄 것이다."</p>
+    <p>직선파(VESPER)는 이를 "세 번째 오점"이라 비난하며 재밀봉을 요구 중. 안건은 다음 평의회로 이월되었다.</p>
+    <p style="color:#77776f; font-style:italic;">— 후보 관찰 주(註): 콘솔을 열고 <span class="mono">whoami</span>를 가장 먼저 입력한 방문자는, 도구를 악용하기 전에 <em>자신이 누구인지</em>부터 물은 자다. 관측 우선순위 상향.</p>
   </div>
 </template>
 
