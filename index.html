@@ -85,6 +85,7 @@
   <ul class="nav-links">
     <li><a href="#/" data-route="home">입구</a></li>
     <li><a href="#/codex" data-route="codex">강령</a></li>
+    <li><a href="#/trial" data-route="trial">시험</a></li>
     <li><a href="#/registry" data-route="registry">명부</a></li>
     <li><a href="#/geometria" data-route="geometria">기하회</a></li>
     <li><a href="#/archive" data-route="archive">흑서고</a></li>
@@ -109,6 +110,7 @@
     <b>[RIVAL]</b> 샤르트르·볼로냐에서 '미완 작도' 3건 추가 관측 — 형(形) 개입 의심 &nbsp;···&nbsp;
     <b>[SYS]</b> 진단 콘솔이 표면 빌드에 노출됨 — 백틱( ` ) 키 · 관측 부서 확인 요망 · 흑서고 #DBG-이상 참조 &nbsp;···&nbsp;
     <b>[OBS]</b> 방문자별 관측 기록 자동 생성 중 — 진단 콘솔 `file` 또는 `whoami`로 열람 가능 &nbsp;···&nbsp;
+    <b>[PROB]</b> 입회 시험(판별식 직관) 상시 개방 — 기본 소양 제1항 실기 검증 · #/trial &nbsp;···&nbsp;
   </div>
 </div>
 
@@ -729,6 +731,112 @@
       <div class="center" style="margin-top:50px;">
         <a class="btn ghost" href="#/terminal">봉인 해제 — Terminal에서 등급 인증</a>
       </div>
+    </div>
+  </section>
+</section>
+
+<!-- ══════════════════════ ROUTE: TRIAL (입회 시험) ══════════════════════ -->
+<section class="route" id="route-trial">
+  <header class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="#/">Surface</a> / Probatio</div>
+      <div class="section-label">Probatio · 입회 시험</div>
+      <h1 class="section-title" data-scramble>THE DISCRIMINANT TRIAL</h1>
+      <div class="section-title-ko">판별식의 시험 — 기본 소양 제1항 실기 검증</div>
+      <hr class="mono-rule">
+      <p class="section-desc" style="margin:0 auto; text-align:center;">
+        이것은 게임이 아니다. 이차방정식의 <em>판별식 부호</em>가 <em>보이는가</em>를 재는 실기다.
+        근의 공식을 외운 자는 느리고, 부호가 보이는 자는 즉답한다.
+        해가 없는 문제를 해가 없다고 <em>3초 안에 선언</em>하라.
+      </p>
+    </div>
+  </header>
+
+  <section class="section" style="padding-top:54px;">
+    <div class="container narrow">
+
+      <!-- START -->
+      <div class="trial-screen on" id="trialStart">
+        <div class="trial-rules">
+          <h3>판정 규칙 · Judgement</h3>
+          <p>
+            식 <em>ax² + bx + c</em>가 나타난다. 판별식 <em>D = b² − 4ac</em>의 부호로
+            근의 상태를 즉시 선택하라 —<br>
+            <span class="k">D &gt; 0</span> 서로 다른 두 실근 ·
+            <span class="k">D = 0</span> 중근(重根) ·
+            <span class="k">D &lt; 0</span> 실근 없음.<br><br>
+            정답은 <em>속도</em>와 <em>연속(streak)</em>으로 가산된다. 오답·시간 초과는 <em>관측(생명)</em>을 하나 잃는다.
+            관측이 소진되면 시험이 종결되고, 점수에 따라 <em>등급</em>이 부여된다.
+            키보드 <span class="k">1</span> <span class="k">2</span> <span class="k">3</span> 으로도 답할 수 있다.
+          </p>
+        </div>
+
+        <div class="trial-modes">
+          <button class="trial-mode sel" data-mode="trial">
+            <div class="mt">시험 · Trial</div>
+            <div class="md">시간 제한 · 관측 3 · 레벨 상승 · 등급 판정 및 관측 기록 등재.</div>
+          </button>
+          <button class="trial-mode" data-mode="practice">
+            <div class="mt">연습 · Practice</div>
+            <div class="md">시간·생명 없음. 정확도만 측정. 기록에 남지 않는다.</div>
+          </button>
+        </div>
+
+        <div class="trial-best" id="trialBest">최고 기록 없음 — 아직 시험받지 않았다.</div>
+
+        <div style="margin-top:30px;">
+          <button class="btn solid" id="trialStartBtn">시험 시작</button>
+        </div>
+      </div>
+
+      <!-- PLAY -->
+      <div class="trial-screen" id="trialPlay">
+        <div class="trial-hud">
+          <div class="hud-cell"><div class="lab">Level</div><div class="val" id="hudLevel">1</div></div>
+          <div class="hud-cell"><div class="lab">Score</div><div class="val" id="hudScore">0</div></div>
+          <div class="hud-cell"><div class="lab">Streak</div><div class="val" id="hudStreak">0</div></div>
+          <div class="hud-cell"><div class="lab">관측 · Lives</div><div class="val lives" id="hudLives">●●●</div></div>
+        </div>
+        <div class="trial-timerbar" id="trialTimerbar"><span id="trialTimerfill"></span></div>
+
+        <div class="trial-stage" id="trialStage">
+          <div class="trial-eq" id="trialEq">x² + 0x + 0</div>
+          <div class="trial-q">근의 상태를 선언하라</div>
+        </div>
+
+        <div class="trial-answers">
+          <button class="trial-ans" data-ans="pos"><div class="ans-t">서로 다른 두 실근</div><div class="ans-d">D &gt; 0</div><div class="ans-k">1</div></button>
+          <button class="trial-ans" data-ans="zero"><div class="ans-t">중근 (重根)</div><div class="ans-d">D = 0</div><div class="ans-k">2</div></button>
+          <button class="trial-ans" data-ans="neg"><div class="ans-t">실근 없음</div><div class="ans-d">D &lt; 0</div><div class="ans-k">3</div></button>
+        </div>
+
+        <div class="trial-toolbar">
+          <button class="mute" id="trialMute" title="소리 켜기/끄기" aria-label="mute">🔈</button>
+          <button class="trial-quit" id="trialQuit">시험 포기</button>
+        </div>
+      </div>
+
+      <!-- END -->
+      <div class="trial-screen" id="trialEnd">
+        <div class="trial-result">
+          <div class="trial-gradesub" id="endGradeSub">Probatio Complete · 판정</div>
+          <div class="trial-grade" id="endGrade">계수</div>
+          <div class="trial-score-big"><span id="endScore">0</span></div>
+          <div class="trial-breakdown">
+            <span>정답 <b id="endCorrect">0</b></span>
+            <span>최고 연속 <b id="endStreak">0</b></span>
+            <span>도달 레벨 <b id="endLevel">1</b></span>
+            <span>정확도 <b id="endAcc">0%</b></span>
+          </div>
+          <div class="trial-verdict" id="endVerdict"></div>
+          <div id="endNewBest"></div>
+          <div style="margin-top:30px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+            <button class="btn solid" id="trialRetry">다시 시험</button>
+            <a class="btn ghost" href="#/codex">기본 소양 전문</a>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 </section>

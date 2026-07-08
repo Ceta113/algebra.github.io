@@ -42,8 +42,10 @@ function loadDossier() {
   if (!d || typeof d !== 'object') {
     d = { firstSeen: Date.now(), visits: 0, routes: {}, foundConsole: false,
           firstCommand: null, commands: 0, veritas: false, ager: false,
-          maxTier: 0, playedHymn: false, crows: 0, corvus: false };
+          maxTier: 0, playedHymn: false, crows: 0, corvus: false,
+          trialBest: 0, trialGrade: null, trialPlays: 0 };
   }
+  if (d.trialBest === undefined) { d.trialBest = 0; d.trialGrade = null; d.trialPlays = 0; }
   return d;
 }
 let DOSSIER = loadDossier();
@@ -74,6 +76,8 @@ function dossierAssessment() {
   const seen = Object.keys(DOSSIER.routes).length;
   if (seen >= 6) notes.push('표면의 모든 전각(殿閣)을 열람했다. 호기심은 소양이자 위험이다.');
   if (DOSSIER.visits >= 3) notes.push('세 번 이상 돌아왔다. 우연은 한 번, 습관은 세 번. — 관측을 유지한다.');
+  if (DOSSIER.trialBest >= 800) notes.push('입회 시험에서 ' + DOSSIER.trialBest + '점(' + (DOSSIER.trialGrade || '') + '). <em>판별식 직관 검증 통과 — 기본 소양 제1항 충족.</em>');
+  else if (DOSSIER.trialBest > 0) notes.push('입회 시험 최고 ' + DOSSIER.trialBest + '점(' + (DOSSIER.trialGrade || '') + '). 아직 제1항 충족에 미달 — 재응시를 권한다.');
   if (!notes.length) notes.push('아직 판단하기 이르다. 계속 지켜본다.');
   return notes;
 }
@@ -92,7 +96,8 @@ function renderDossierDoc() {
     ['진단 콘솔', DOSSIER.foundConsole ? '발견함 · 명령 ' + DOSSIER.commands + '회' : '미발견'],
     ['복호 신호', (DOSSIER.veritas ? 'veritas ' : '') + (DOSSIER.ager ? 'ager' : '') || '없음'],
     ['성가 청취', DOSSIER.playedHymn ? '예' : '아니오'],
-    ['까마귀 소환', DOSSIER.crows + '회' + (DOSSIER.corvus ? ' · corvus 부름 확인' : '')]
+    ['까마귀 소환', DOSSIER.crows + '회' + (DOSSIER.corvus ? ' · corvus 부름 확인' : '')],
+    ['입회 시험', DOSSIER.trialBest > 0 ? DOSSIER.trialBest + '점 · ' + DOSSIER.trialGrade + ' (' + DOSSIER.trialPlays + '회 응시)' : '미응시']
   ];
   const rowsHTML = rows.map(r => '<p style="margin:6px 0;"><em style="display:inline-block;min-width:96px;color:#77776f;font-weight:400;">' + r[0] + '</em> ' + r[1] + '</p>').join('');
   const notesHTML = dossierAssessment().map(n => '<p>· ' + n + '</p>').join('');
@@ -134,7 +139,7 @@ function applyClearance() {
 }
 
 /* ───────────────────────── Router ───────────────────────── */
-const ROUTES = ['home', 'codex', 'registry', 'geometria', 'archive', 'signals', 'terminal'];
+const ROUTES = ['home', 'codex', 'trial', 'registry', 'geometria', 'archive', 'signals', 'terminal'];
 let revealObserver = null;
 
 function initReveal(scope) {
@@ -844,6 +849,219 @@ function initTilt() {
   });
 }
 
+/* ═══════════════════ PROBATIO — discriminant trial ═══════════════════ */
+const TRIAL_GRADES = [
+  { min: 3000, name: '행렬', sub: 'Gradus Ⅳ · Custos', verdict: '판별식이 눈이 되었다. 이 속도는 훈련이 아니라 <em>천성</em>이다. 지부 수호자의 자질 — 회는 이미 너를 안다.' },
+  { min: 1500, name: '함수', sub: 'Gradus Ⅲ · Operarius', verdict: '부호가 보이는 자다. 계산하지 않고 <em>선언</em>했다. 실무 단원의 자질 — 검은 봉투가 준비된다.' },
+  { min: 800,  name: '변수', sub: 'Gradus Ⅱ · Initiatus', verdict: '기본 소양 제1항을 충족했다. <em>입회 후보 자격</em>이 확인되었다. 이제 남은 것은 침묵의 검증이다.' },
+  { min: 300,  name: '계수', sub: 'Gradus Ⅰ · Observatus', verdict: '관측할 가치가 있다. 아직 즉답에 이르지 못했으나, 헛된 계산에 시간을 버리지는 않았다. — 관측 대상 등재.' },
+  { min: 0,    name: '무명수', sub: 'Incognita', verdict: '아직은 근의 공식을 <em>외우는</em> 자다. 부호를 보는 눈은 반복으로 열린다. 다시 응시하라 — 문은 닫히지 않았다.' }
+];
+function trialGradeFor(score) { return TRIAL_GRADES.find(g => score >= g.min); }
+
+function initTrial() {
+  const root = document.getElementById('route-trial');
+  if (!root) return;
+  const $ = id => document.getElementById(id);
+  const startS = $('trialStart'), playS = $('trialPlay'), endS = $('trialEnd');
+  const eqEl = $('trialEq'), stage = $('trialStage'), fill = $('trialTimerfill'), tbar = $('trialTimerbar');
+  const answers = Array.from(root.querySelectorAll('.trial-ans'));
+  let mode = 'trial', muted = false;
+  let cur = null, correctCount = 0, total = 0, score = 0, streak = 0, bestStreak = 0,
+      level = 1, lives = 3, locked = false;
+  let rafId = null, qStart = 0, qLimit = 0;
+
+  // tiny WebAudio blip (never throws)
+  let actx = null;
+  function blip(freq, dur) {
+    if (muted) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'square'; o.frequency.value = freq;
+      g.gain.value = 0.04; o.connect(g); g.connect(actx.destination);
+      o.start(); g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + (dur || 0.08));
+      o.stop(actx.currentTime + (dur || 0.08));
+    } catch (e) {}
+  }
+
+  const rint = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+  function fmtEq(a, b, c) {
+    let s = '';
+    s += (a === 1 ? '' : a === -1 ? '−' : (a < 0 ? '−' + Math.abs(a) : a)) + 'x<span class="sup2">2</span>';
+    if (b !== 0) s += ' ' + (b < 0 ? '− ' : '+ ') + (Math.abs(b) === 1 ? '' : Math.abs(b)) + 'x';
+    if (c !== 0) s += ' ' + (c < 0 ? '− ' : '+ ') + Math.abs(c);
+    return s;
+  }
+  // generate a quadratic with a controlled discriminant outcome
+  function genQ() {
+    const mag = 2 + level;
+    const maxA = level < 3 ? 1 : level < 6 ? 2 : 3;
+    const roll = Math.random();
+    const outcome = roll < 0.34 ? 'pos' : roll < 0.67 ? 'neg' : 'zero';
+    let a, b, c;
+    if (outcome === 'zero') {
+      a = rint(1, maxA);
+      const r = rint(1, Math.max(2, Math.floor(mag / 1.4))) * (Math.random() < 0.5 ? 1 : -1);
+      b = -2 * a * r; c = a * r * r;
+    } else if (outcome === 'pos') {
+      a = rint(1, maxA);
+      let p = rint(-mag, mag), q = rint(-mag, mag);
+      while (p === q) q = rint(-mag, mag);
+      b = -a * (p + q); c = a * p * q;
+    } else { // neg: a>0, choose c above b^2/(4a)
+      a = rint(1, maxA);
+      b = rint(-mag, mag);
+      const cmin = Math.floor((b * b) / (4 * a)) + 1;
+      c = cmin + rint(0, mag);
+    }
+    if (level >= 7 && Math.random() < 0.4) { a = -a; b = -b; c = -c; } // sign-flip for reading difficulty
+    return { a, b, c, outcome };
+  }
+
+  function updHUD() {
+    $('hudLevel').textContent = level;
+    $('hudScore').textContent = score;
+    $('hudStreak').textContent = streak;
+    let lv = ''; for (let i = 0; i < 3; i++) lv += i < lives ? '●' : '<span class="spent">●</span>';
+    $('hudLives').innerHTML = mode === 'practice' ? '∞' : lv;
+  }
+
+  function nextQ() {
+    locked = false;
+    answers.forEach(b => b.classList.remove('correct', 'wrong', 'reveal-correct'));
+    cur = genQ();
+    eqEl.innerHTML = fmtEq(cur.a, cur.b, cur.c);
+    if (mode === 'trial') {
+      qLimit = Math.max(1800, 6000 - (level - 1) * 500); // ms
+      qStart = performance.now();
+      tbar.style.display = '';
+      runTimer();
+    } else {
+      tbar.style.display = 'none';
+    }
+  }
+
+  function runTimer() {
+    cancelAnimationFrame(rafId);
+    const tick = () => {
+      const elapsed = performance.now() - qStart;
+      const frac = Math.max(0, 1 - elapsed / qLimit);
+      fill.style.transform = 'scaleX(' + frac + ')';
+      tbar.classList.toggle('warn', frac < 0.34);
+      if (frac <= 0) { timeout(); return; }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function timeout() {
+    if (locked) return;
+    locked = true; cancelAnimationFrame(rafId);
+    answers.find(b => b.dataset.ans === cur.outcome)?.classList.add('reveal-correct');
+    blip(160, 0.16);
+    stage.classList.remove('flash-bad'); void stage.offsetWidth; stage.classList.add('flash-bad');
+    loseLife();
+  }
+
+  function answer(pick) {
+    if (locked || !cur) return;
+    locked = true; cancelAnimationFrame(rafId);
+    total++;
+    const right = pick === cur.outcome;
+    const btn = answers.find(b => b.dataset.ans === pick);
+    if (right) {
+      correctCount++;
+      const frac = mode === 'trial' ? Math.max(0, 1 - (performance.now() - qStart) / qLimit) : 0.5;
+      const gain = 100 + Math.round(120 * frac) + streak * 15;
+      score += gain; streak++; bestStreak = Math.max(bestStreak, streak);
+      if (mode === 'trial' && correctCount % 5 === 0) level++;
+      btn.classList.add('correct');
+      blip(660, 0.07);
+      stage.classList.remove('flash-ok'); void stage.offsetWidth; stage.classList.add('flash-ok');
+      updHUD();
+      setTimeout(() => { if (isActive()) nextQ(); }, 340);
+    } else {
+      streak = 0;
+      btn.classList.add('wrong');
+      answers.find(b => b.dataset.ans === cur.outcome)?.classList.add('reveal-correct');
+      blip(160, 0.16);
+      stage.classList.remove('flash-bad'); void stage.offsetWidth; stage.classList.add('flash-bad');
+      loseLife();
+    }
+  }
+
+  function loseLife() {
+    if (mode === 'practice') { updHUD(); setTimeout(() => { if (isActive()) nextQ(); }, 700); return; }
+    lives--; updHUD();
+    if (lives <= 0) setTimeout(endGame, 700);
+    else setTimeout(() => { if (isActive()) nextQ(); }, 700);
+  }
+
+  function isActive() { return playS.classList.contains('on'); }
+  function show(el) { [startS, playS, endS].forEach(s => s.classList.remove('on')); el.classList.add('on'); }
+
+  function start() {
+    correctCount = total = score = streak = bestStreak = 0; level = 1; lives = 3; locked = false;
+    updHUD(); show(playS); nextQ();
+  }
+
+  function endGame() {
+    cancelAnimationFrame(rafId);
+    show(endS);
+    const g = trialGradeFor(score);
+    const acc = total ? Math.round((correctCount / total) * 100) : 0;
+    $('endGrade').textContent = g.name;
+    $('endGradeSub').textContent = g.sub;
+    $('endScore').textContent = score;
+    $('endCorrect').textContent = correctCount;
+    $('endStreak').textContent = bestStreak;
+    $('endLevel').textContent = level;
+    $('endAcc').textContent = acc + '%';
+    $('endVerdict').innerHTML = g.verdict;
+    let nb = '';
+    if (mode === 'trial') {
+      DOSSIER.trialPlays++;
+      if (score > DOSSIER.trialBest) { DOSSIER.trialBest = score; DOSSIER.trialGrade = g.name; nb = '<span class="trial-newbest">New Best · 최고 기록 갱신</span>'; }
+      saveDossier();
+    } else {
+      $('endGradeSub').textContent = 'Practice · 연습 (기록 없음)';
+      $('endVerdict').innerHTML = '연습 정확도 ' + acc + '%. 시험 모드에서 <em>시간 압박</em>을 이겨야 진짜 소양이다.';
+    }
+    $('endNewBest').innerHTML = nb;
+    renderBest();
+  }
+
+  function renderBest() {
+    const el = $('trialBest');
+    if (!el) return;
+    el.innerHTML = DOSSIER.trialBest > 0
+      ? '최고 기록 <b>' + DOSSIER.trialBest + '</b>점 · 등급 <b>' + DOSSIER.trialGrade + '</b> · 응시 ' + DOSSIER.trialPlays + '회'
+      : '최고 기록 없음 — 아직 시험받지 않았다.';
+  }
+
+  // wiring
+  root.querySelectorAll('.trial-mode').forEach(m => m.addEventListener('click', () => {
+    root.querySelectorAll('.trial-mode').forEach(x => x.classList.remove('sel'));
+    m.classList.add('sel'); mode = m.dataset.mode;
+    $('trialStartBtn').textContent = mode === 'practice' ? '연습 시작' : '시험 시작';
+  }));
+  $('trialStartBtn').addEventListener('click', start);
+  $('trialRetry').addEventListener('click', () => show(startS));
+  $('trialQuit').addEventListener('click', () => { if (mode === 'trial' && score > 0) endGame(); else show(startS); });
+  $('trialMute').addEventListener('click', () => { muted = !muted; $('trialMute').textContent = muted ? '🔇' : '🔈'; });
+  answers.forEach(b => b.addEventListener('click', () => answer(b.dataset.ans)));
+  document.addEventListener('keydown', e => {
+    if (!isActive()) return;
+    if (e.key === '1') answer('pos');
+    else if (e.key === '2') answer('zero');
+    else if (e.key === '3') answer('neg');
+  });
+  // leaving the route ends any run cleanly
+  window.addEventListener('hashchange', () => { if (routeFromHash() !== 'trial') { cancelAnimationFrame(rafId); if (isActive()) show(startS); } });
+  renderBest();
+}
+
 /* ═══════════════════ DIAGNOSTIC CONSOLE (debug) ═══════════════════ */
 // In-world: 관측 부서 진단 콘솔이 표면 빌드에 유출됨. Real: dev/debug tool.
 const BUILD = 'v389.7 · surface';
@@ -994,6 +1212,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollProgress();
   initMagnetic();
   initTilt();
+  initTrial();
   initDiag();
   DOSSIER.visits++; saveDossier();
   scheduleCrows();
