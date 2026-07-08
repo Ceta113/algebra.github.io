@@ -27,10 +27,85 @@ function currentTier() {
   const v = parseInt(sessionStorage.getItem(TIER_KEY) || '0', 10);
   return Number.isFinite(v) ? v : 0;
 }
-function grantTier(t) { try { sessionStorage.setItem(TIER_KEY, String(t)); } catch (e) {} applyClearance(); }
+function grantTier(t) { try { sessionStorage.setItem(TIER_KEY, String(t)); } catch (e) {} if (typeof DOSSIER === 'object' && t > DOSSIER.maxTier) dmark({ maxTier: t }); applyClearance(); }
 function revokeTier() { try { sessionStorage.removeItem(TIER_KEY); } catch (e) {} applyClearance(); }
 
 const TIER_NAMES = { 0: 'NO CLEARANCE', 1: 'ACCESS Ⅰ', 2: 'ACCESS Ⅱ', 3: 'ACCESS Ⅲ' };
+
+/* ═══════════════ OBSERVER — visitor dossier ═══════════════ */
+// The site's core premise made literal: it observes YOU and keeps a file.
+// Persisted in localStorage so returning visitors are "remembered".
+const DKEY = 'ordo_dossier';
+function loadDossier() {
+  let d;
+  try { d = JSON.parse(localStorage.getItem(DKEY)); } catch (e) {}
+  if (!d || typeof d !== 'object') {
+    d = { firstSeen: Date.now(), visits: 0, routes: {}, foundConsole: false,
+          firstCommand: null, commands: 0, veritas: false, ager: false,
+          maxTier: 0, playedHymn: false, crows: 0, corvus: false };
+  }
+  return d;
+}
+let DOSSIER = loadDossier();
+function saveDossier() { try { localStorage.setItem(DKEY, JSON.stringify(DOSSIER)); } catch (e) {} }
+function dmark(patch) { Object.assign(DOSSIER, patch); saveDossier(); }
+function droute(r) { DOSSIER.routes[r] = (DOSSIER.routes[r] || 0) + 1; saveDossier(); }
+
+// deterministic pseudo-identity from firstSeen
+function dHash() { let h = 2166136261 >>> 0; const s = String(DOSSIER.firstSeen); for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h; }
+function dCandidate() { return 'C-' + (200 + (dHash() % 800)); }
+function dCoord() { const h = dHash(); return '(' + (((h >> 3) % 480) - 240) + ', ' + (((h >> 11) % 480) - 240) + ')'; }
+
+function dossierAssessment() {
+  const t = currentTier();
+  const notes = [];
+  if (DOSSIER.firstCommand === 'whoami')
+    notes.push('첫 명령어가 <em>whoami</em>였다. 도구를 악용하기 전에 자신이 누구인지부터 물은 자. — 관측 우선순위 상향(#DBG-이상).');
+  else if (DOSSIER.firstCommand === 'reset')
+    notes.push('첫 명령어가 <em>reset</em>이었다. 흔적을 지우려는 본능. — 별도 분류.');
+  else if (DOSSIER.firstCommand)
+    notes.push('첫 명령어: <em>' + DOSSIER.firstCommand + '</em>. 기록되었다.');
+  if (t >= 3) notes.push('까마귀의 언어(2진)로 가장 깊은 문을 열었다. 원점 후보 풀에 잠정 등재.');
+  else if (t === 2) notes.push('서기의 언어(16진)를 읽었다. 제Ⅳ급 이상의 자질.');
+  else if (t === 1) notes.push('육신의 언어로 첫 문을 열었다. 입회 후보 자격 확인.');
+  if (DOSSIER.ager) notes.push('SIEVE의 최후 신호("ager")를 스스로 복호했다. 들판을 아는 자.');
+  if (DOSSIER.playedHymn) notes.push('입회 전례 성가 〈Clavis Umbrae〉를 들었다. 아직 서약하지 않았음에도.');
+  if (DOSSIER.corvus) notes.push('까마귀를 불렀다(<em>corvus</em>). 우리가 너를 부른 것이 아니라, 네가 우리를 불렀다.');
+  const seen = Object.keys(DOSSIER.routes).length;
+  if (seen >= 6) notes.push('표면의 모든 전각(殿閣)을 열람했다. 호기심은 소양이자 위험이다.');
+  if (DOSSIER.visits >= 3) notes.push('세 번 이상 돌아왔다. 우연은 한 번, 습관은 세 번. — 관측을 유지한다.');
+  if (!notes.length) notes.push('아직 판단하기 이르다. 계속 지켜본다.');
+  return notes;
+}
+
+function renderDossierDoc() {
+  const t = currentTier();
+  const since = new Date(DOSSIER.firstSeen);
+  const pad = n => String(n).padStart(2, '0');
+  const sinceStr = since.getFullYear() + '.' + pad(since.getMonth() + 1) + '.' + pad(since.getDate());
+  const routesSeen = Object.keys(DOSSIER.routes);
+  const rows = [
+    ['최초 관측', sinceStr + ' (누적 방문 ' + DOSSIER.visits + '회)'],
+    ['부여 식별', dCandidate() + ' · 좌표 ' + dCoord()],
+    ['열람 등급', TIER_NAMES[t]],
+    ['열람 전각', routesSeen.length + '/6 (' + (routesSeen.join(', ') || '—') + ')'],
+    ['진단 콘솔', DOSSIER.foundConsole ? '발견함 · 명령 ' + DOSSIER.commands + '회' : '미발견'],
+    ['복호 신호', (DOSSIER.veritas ? 'veritas ' : '') + (DOSSIER.ager ? 'ager' : '') || '없음'],
+    ['성가 청취', DOSSIER.playedHymn ? '예' : '아니오'],
+    ['까마귀 소환', DOSSIER.crows + '회' + (DOSSIER.corvus ? ' · corvus 부름 확인' : '')]
+  ];
+  const rowsHTML = rows.map(r => '<p style="margin:6px 0;"><em style="display:inline-block;min-width:96px;color:#77776f;font-weight:400;">' + r[0] + '</em> ' + r[1] + '</p>').join('');
+  const notesHTML = dossierAssessment().map(n => '<p>· ' + n + '</p>').join('');
+  return '<div class="doc-classification">관측 기록 · 귀하 전용 · OBSERVER FILE</div>'
+    + '<div class="doc-stamp-big">Observed</div>'
+    + '<div class="doc-title">' + dCandidate() + ' — 귀하에 관한 관측 기록</div>'
+    + '<div class="doc-sub">본 파일은 귀하의 브라우저에만 존재한다. 우리는 아무것도 전송받지 않았다 — 그러나 <em>이만큼</em>은 안다.</div>'
+    + '<div class="doc-body"><div class="mono" style="background:#e7e7e2;">' + rowsHTML + '</div>'
+    + '<p style="margin-top:22px;font-family:\'Cinzel\',serif;font-size:0.7rem;letter-spacing:0.24em;color:#77776f;text-transform:uppercase;">Assessment · 평가</p>'
+    + notesHTML
+    + '<p style="margin-top:24px;color:#77776f;font-style:italic;">이 기록을 지우려면 진단 콘솔에 <span class="mono" style="display:inline;padding:2px 6px;">reset</span>. '
+    + '그러나 기억하라 — 우리가 잊는 것과, 네가 지운 것은 다르다.</p></div>';
+}
 
 function applyClearance() {
   const t = currentTier();
@@ -101,6 +176,7 @@ function navigate() {
       a.classList.toggle('active', a.dataset.route === route);
     });
     document.querySelector('.nav-links')?.classList.remove('open');
+    droute(route);
     window.scrollTo(0, 0);
     initReveal(target);
     scrambleHeadings(target);
@@ -342,7 +418,7 @@ function toggle(id) {
   if (!a) return;
   if (currentId && currentId !== id) { audioMap[currentId].pause(); syncUI(currentId); }
   currentId = id;
-  if (a.paused) a.play(); else a.pause();
+  if (a.paused) { a.play(); if (id === 'clavis' && !DOSSIER.playedHymn) dmark({ playedHymn: true }); } else a.pause();
   syncUI(id);
 }
 function seek(id, e, barEl) {
@@ -396,6 +472,7 @@ function initConsole() {
     if (PUZZLES[key]) {
       if (PUZZLES[key].done) { print('… 이미 복호화된 신호다.', true); return; }
       PUZZLES[key].done = true;
+      dmark({ [key]: true });
       PUZZLES[key].reply.forEach((l, i) => setTimeout(() => print(l, true), 260 * (i + 1)));
       if (key === 'ager') setTimeout(() => spawnCrow(), 800);
     } else if (/^[01\s]+$/.test(raw) || /^[0-9a-f\s]+$/.test(raw)) {
@@ -413,6 +490,7 @@ function isGaloisDay() {
 }
 
 let openDocFn = null; // lifted for diagnostic console
+let openHTMLFn = null; // lifted for observer dossier
 
 function initArchive() {
   const viewer = document.getElementById('docViewer');
@@ -446,6 +524,12 @@ function initArchive() {
   viewer.addEventListener('click', e => { if (e.target === viewer) close(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   openDocFn = openDoc;
+  openHTMLFn = function (html) {
+    paper.innerHTML = '<button class="doc-close" aria-label="close">✕</button>' + html;
+    paper.querySelector('.doc-close').addEventListener('click', close);
+    paper.classList.remove('slammed'); void paper.offsetWidth; paper.classList.add('slammed');
+    viewer.classList.add('open'); document.body.style.overflow = 'hidden';
+  };
 }
 
 /* ───────────────────────── Terminal ───────────────────────── */
@@ -635,6 +719,7 @@ function spawnCrow(opts) {
   if (REDUCED) return;
   const layer = document.getElementById('crowLayer');
   if (!layer) return;
+  if (typeof DOSSIER === 'object') { DOSSIER.crows++; saveDossier(); }
   const o = opts || {};
   const size = o.size || (22 + Math.random() * 34);
   const rtl = o.rtl !== undefined ? o.rtl : Math.random() < 0.5;
@@ -678,6 +763,7 @@ function initEasterEgg() {
     buf = (buf + e.key.toLowerCase()).slice(-6);
     if (buf === 'corvus') {
       buf = '';
+      dmark({ corvus: true });
       spawnCrowFlock(12);
       showToast('MURDER OF CROWS', '까마귀는 부름을 기억한다. 너를 부른 것이 우리가 아니라, 네가 우리를 불렀다는 것도.');
     }
@@ -792,7 +878,7 @@ function initDiag() {
       '<div><span class="k">MOTION</span><span class="v">' + (REDUCED ? 'reduced' : 'full') + '</span></div>';
   }
 
-  const open = () => { panel.classList.add('open'); renderState(); setTimeout(() => inEl.focus(), 200); };
+  const open = () => { panel.classList.add('open'); if (!DOSSIER.foundConsole) dmark({ foundConsole: true }); renderState(); setTimeout(() => inEl.focus(), 200); };
   const close = () => panel.classList.remove('open');
   const toggle = () => panel.classList.contains('open') ? close() : open();
   window.__diagToggle = toggle;
@@ -808,6 +894,7 @@ function initDiag() {
       log('  hex <말> / bin <말>   서기·까마귀 언어 변환기');
       log('  decode           감청 퍼즐(veritas·ager) 즉시 해결');
       log('  audio play|pause|clavis|glass');
+      log('  file / dossier   귀하에 관한 관측 기록 열람');
       log('  whoami           관측 상태 조회');
       log('  reset            세션 초기화(부팅·등급·퍼즐) 후 새로고침');
       log('  clear            로그 지우기');
@@ -836,7 +923,9 @@ function initDiag() {
     crow(a) { const n = Math.max(1, Math.min(20, parseInt(a, 10) || 1)); spawnCrowFlock(n); log('→ ' + n + ' crow(s)', 'ok'); },
     hex(a) { if (!a) return log('✕ hex <word>', 'bad'); log(a + ' → ' + enc(a, 16), 'ok'); },
     bin(a) { if (!a) return log('✕ bin <word>', 'bad'); log(a + ' → ' + enc(a, 2), 'ok'); },
-    decode() { PUZZLES.veritas.done = true; PUZZLES.ager.done = true; log('→ intercepts T-093·T-101 marked decoded', 'ok'); renderState(); },
+    decode() { PUZZLES.veritas.done = true; PUZZLES.ager.done = true; dmark({ veritas: true, ager: true }); log('→ intercepts T-093·T-101 marked decoded', 'ok'); renderState(); },
+    file() { log('→ opening YOUR observation file…', 'ok'); close(); setTimeout(() => { if (openHTMLFn) openHTMLFn(renderDossierDoc()); }, 160); },
+    dossier() { this.file(); },
     audio(a) {
       if (a === 'play' || a === 'pause') { if (currentId) { const x = audioMap[currentId]; a === 'play' ? x.play() : x.pause(); } }
       else if (a === 'clavis' || a === 'glass') { toggle_(a); }
@@ -844,12 +933,14 @@ function initDiag() {
       function toggle_(id){ if (currentId && currentId!==id) audioMap[currentId].pause(); currentId=id; audioMap[id].play(); }
     },
     whoami() {
-      log('당신은 좌석 없는 관측 대상이다. STATUS: 무명수(Ⅰ 후보 풀).', 'ok');
-      log('이 콘솔은 관측 부서 내부 도구다 — 당신이 이것을 보고 있다는 사실이 이미 기록되었다.');
+      log('식별 ' + dCandidate() + ' · 좌표 ' + dCoord() + ' · 등급 ' + TIER_NAMES[currentTier()], 'ok');
+      log('최초 관측 이래 ' + DOSSIER.visits + '회 방문 · 열람 전각 ' + Object.keys(DOSSIER.routes).length + '/6');
+      dossierAssessment().slice(0, 2).forEach(n => log('· ' + n.replace(/<[^>]+>/g, '')));
+      log('전체 기록: `file` 입력. 이 콘솔은 관측 부서 도구다 — 지금 이 조회 또한 기록되었다.');
     },
     reset() {
-      try { sessionStorage.clear(); } catch (e) {}
-      log('→ session cleared. reloading…', 'ok'); setTimeout(() => location.reload(), 600);
+      try { sessionStorage.clear(); localStorage.removeItem(DKEY); } catch (e) {}
+      log('→ session + observation file cleared. reloading…', 'ok'); setTimeout(() => location.reload(), 600);
     },
     clear() { logEl.innerHTML = ''; }
   };
@@ -858,7 +949,10 @@ function initDiag() {
     const line = raw.trim(); if (!line) return;
     log('> ' + line, 'cmd');
     const [cmd, ...rest] = line.split(/\s+/);
-    const fn = COMMANDS[cmd.toLowerCase()];
+    const lc = cmd.toLowerCase();
+    if (!DOSSIER.firstCommand) dmark({ firstCommand: lc });
+    DOSSIER.commands++; saveDossier();
+    const fn = COMMANDS[lc];
     if (fn) { try { fn(rest.join(' ')); } catch (e) { log('✕ ' + e.message, 'bad'); } }
     else log('✕ unknown: ' + cmd + '  (help)', 'bad');
   }
@@ -901,6 +995,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMagnetic();
   initTilt();
   initDiag();
+  DOSSIER.visits++; saveDossier();
   scheduleCrows();
   navigate();
 });
